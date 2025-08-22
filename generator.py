@@ -15,7 +15,7 @@ print("$switch $OrigFnType.params.len:")
 for i in range(10 + 1):
 	print(f"$case {i}:")
 	print("\t$switch $OrigFnType.params.len - $vacount:")
-	for j in range(i):
+	for j in range(i + 1):
 		print(f"\t$case {j}:")
 		print("\t\tvar $NewFnType = $typeof(fn Type(Closure", end = '')
 		for k in range(j):
@@ -34,7 +34,7 @@ for i in range(10 + 1):
 		print(");")
 		print("\t\t};")
 	print("\t$default:")
-	print("""$error "Unsupported number of function parameters";""")
+	print("""\t\t$error "Unsupported number of function parameters";""")
 	print("\t$endswitch")
 print("$endswitch")
 print("return f;")

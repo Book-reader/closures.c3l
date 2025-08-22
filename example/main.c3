@@ -26,7 +26,17 @@ fn int main(String[] args)
 		return;
 	}, &a, add1);
 
-	calc_something.exec();
+	defer
+	{
+		add1.free();
+		add1 = closure::@new {int}(mem, fn int(int a)
+		{
+			io::printfn("%s", a);
+			return a;
+		});
+		calc_something.exec();
+	}
+
 	calc_something.exec();
 	calc_something.exec();
 	return 0;
