@@ -9,7 +9,7 @@
 #		print(f"{ch}2 ", end = '')
 #	print()
 print("module closure {Type};")
-print("macro @generate_closure($OrigFnType, ...) @private\n{")
+print("macro @generate_closure($OrigFnType, $offset, ...) @private\n{")
 print("var $params = $OrigFnType.params;")
 print("$switch $OrigFnType.params.len:")
 for i in range(10 + 1):
@@ -28,7 +28,7 @@ for i in range(10 + 1):
 		print(")\n\t\t{")
 		print("\t\t\treturn (($OrigFnType)closure[1])(", end = '')
 		for k in range(i - j):
-			print(f"*($typefrom($params[{k}])*)closure[3 + {k}], ", end = '')
+			print(f"*($typefrom($params[{k}])*)closure[$offset + {k}], ", end = '')
 		for k in range(j):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(");")

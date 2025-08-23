@@ -11,15 +11,13 @@ fn int add3(int a, int b, int c)
 fn int main(String[] args)
 {
 	int a = 1;
-	Closure {int} add1 = closure::@new {int}(mem, &add3, a, 2);
-	defer add1.free();
+	Closure {int} add1 = closure::@new {int}(&add3, a, 2);
 	io::printfn(" = %s", add1.exec(3));
 	a = 5;
 	io::printfn(" = %s", add1.exec(3));
 
 
-	// no calc_something.free() is needed since it uses tmem
-	Closure {void} calc_something = closure::@new {void}(tmem, fn void(int* a, Closure {int} add1)
+	Closure {void} calc_something = closure::@new {void}(fn void(int* a, Closure {int} add1)
 	{
 		*a += 1;
 		io::printfn(" = %s", add1.exec(1));
@@ -29,8 +27,7 @@ fn int main(String[] args)
 	calc_something.exec();
 	calc_something.exec();
 
-	add1.free();
-	add1 = closure::@new {int}(mem, fn int(int a)
+	add1 = closure::@new {int}(fn int(int a)
 	{
 		io::printfn("%s", a);
 		return a;

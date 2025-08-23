@@ -1,5 +1,5 @@
 module closure {Type};
-macro @generate_closure($OrigFnType, ...) @private
+macro @generate_closure($OrigFnType, $offset, ...) @private
 {
 var $params = $OrigFnType.params;
 $switch $OrigFnType.params.len:
@@ -22,7 +22,7 @@ $case 1:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
@@ -41,14 +41,14 @@ $case 2:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
@@ -67,21 +67,21 @@ $case 3:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
@@ -100,28 +100,28 @@ $case 4:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
@@ -140,35 +140,35 @@ $case 5:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, d, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4])) => unreachable());
@@ -187,42 +187,42 @@ $case 6:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, c, d, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, d, e, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5])) => unreachable());
@@ -241,49 +241,49 @@ $case 7:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, b, c, d, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, c, d, e, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, d, e, f, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6])) => unreachable());
@@ -302,56 +302,56 @@ $case 8:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], *($typefrom($params[7])*)closure[3 + 7], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], *($typefrom($params[7])*)closure[$offset + 7], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], a, b, c, d, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, b, c, d, e, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, c, d, e, f, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f, g)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, d, e, f, g, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, d, e, f, g, );
 		};
 	$case 8:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7])) => unreachable());
@@ -370,63 +370,63 @@ $case 9:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], *($typefrom($params[7])*)closure[3 + 7], *($typefrom($params[8])*)closure[3 + 8], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], *($typefrom($params[7])*)closure[$offset + 7], *($typefrom($params[8])*)closure[$offset + 8], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], *($typefrom($params[7])*)closure[3 + 7], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], *($typefrom($params[7])*)closure[$offset + 7], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], a, b, c, d, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], a, b, c, d, e, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, b, c, d, e, f, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f, g)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, c, d, e, f, g, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, c, d, e, f, g, );
 		};
 	$case 8:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f, g, h)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, d, e, f, g, h, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, d, e, f, g, h, );
 		};
 	$case 9:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), $typefrom($params[$vacount + 8])) => unreachable());
@@ -445,70 +445,70 @@ $case 10:
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], *($typefrom($params[7])*)closure[3 + 7], *($typefrom($params[8])*)closure[3 + 8], *($typefrom($params[9])*)closure[3 + 9], );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], *($typefrom($params[7])*)closure[$offset + 7], *($typefrom($params[8])*)closure[$offset + 8], *($typefrom($params[9])*)closure[$offset + 9], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], *($typefrom($params[7])*)closure[3 + 7], *($typefrom($params[8])*)closure[3 + 8], a, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], *($typefrom($params[7])*)closure[$offset + 7], *($typefrom($params[8])*)closure[$offset + 8], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], *($typefrom($params[7])*)closure[3 + 7], a, b, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], *($typefrom($params[7])*)closure[$offset + 7], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], *($typefrom($params[6])*)closure[3 + 6], a, b, c, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], *($typefrom($params[6])*)closure[$offset + 6], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], *($typefrom($params[5])*)closure[3 + 5], a, b, c, d, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], *($typefrom($params[5])*)closure[$offset + 5], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], *($typefrom($params[4])*)closure[3 + 4], a, b, c, d, e, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], *($typefrom($params[4])*)closure[$offset + 4], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], *($typefrom($params[3])*)closure[3 + 3], a, b, c, d, e, f, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], *($typefrom($params[3])*)closure[$offset + 3], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f, g)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], *($typefrom($params[2])*)closure[3 + 2], a, b, c, d, e, f, g, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], *($typefrom($params[2])*)closure[$offset + 2], a, b, c, d, e, f, g, );
 		};
 	$case 8:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f, g, h)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], *($typefrom($params[1])*)closure[3 + 1], a, b, c, d, e, f, g, h, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], *($typefrom($params[1])*)closure[$offset + 1], a, b, c, d, e, f, g, h, );
 		};
 	$case 9:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), $typefrom($params[$vacount + 8])) => unreachable());
 		evil_hack::INIT{Closure, $NewFnType};
 		$NewFnType f = fn (closure, a, b, c, d, e, f, g, h, i)
 		{
-			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[3 + 0], a, b, c, d, e, f, g, h, i, );
+			return (($OrigFnType)closure[1])(*($typefrom($params[0])*)closure[$offset + 0], a, b, c, d, e, f, g, h, i, );
 		};
 	$case 10:
 		var $NewFnType = $typeof(fn Type(Closure, $typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), $typefrom($params[$vacount + 8]), $typefrom($params[$vacount + 9])) => unreachable());
