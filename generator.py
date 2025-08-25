@@ -39,3 +39,32 @@ for i in range(10 + 1):
 print("$endswitch")
 print("return f;")
 print("}")
+
+print("module closure::closure_fn {Type};")
+print("macro @generate_closure_call_func($OrigFnType, uint $hash, ...) @private\n{")
+print("var $params = $OrigFnType.params;")
+print("\t$switch $OrigFnType.params.len:")
+for i in range(10 + 1):
+	print(f"\t$case {i}:")
+	print("\t\t$switch $OrigFnType.params.len - $vacount:")
+	for j in range(i + 1):
+		print(f"\t\t$case {j}:")
+		print("\t\tvar $NewFnType = $typeof(fn Type(", end = '')
+		for k in range(j):
+			print(f"$typefrom($params[$vacount + {k}]), ", end = '')
+		print(") => unreachable());")
+		print("\t\t\t$NewFnType f = fn (", end = '')
+		for k in range(j):
+			print(f"{chr(97 + k)}, ", end = '')
+		print(")\n\t\t\t{")
+		print("\t\t\t\treturn closures[$hash]!!.exec(", end = '')
+		for k in range(j):
+			print(f"{chr(97 + k)}, ", end = '')
+		print(");")
+		print("\t\t\t};")
+		print("\t\t\treturn f;")
+	print("\t\t$default:")
+	print("""\t\t\t$error "Unsupported number of function parameters";""")
+	print("\t\t$endswitch")
+print("\t$endswitch")
+print("}")

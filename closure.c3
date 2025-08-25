@@ -1,6 +1,7 @@
 module closure {Type};
 import std::io;
 
+
 macro Closure @new($func, ...)
 {
 	var $OrigFnType = $typeof($func);
@@ -24,9 +25,25 @@ alias ClosureFn = fn Type(Closure self, args...);
 
 typedef Closure = void**;
 
+module closure::closure_fn {Type};
+import closure;
+
+import std::collections::map;
+// TODO: try to find some way to get this to work with a List {Closure {Type}} instead.
+tlocal HashMap {uint, Closure {Type}} closures;
+
+macro @new($func, ...)
+{
+	var cl = closure::@new {Type} ($func, $vasplat);
+	if (!closures.is_initialized()) closures.tinit();
+	uint $hash = $$LINE + (uint)((@rnd() * 100000) * (@rnd() * 10));
+	closures.set($hash, cl);
+	return @generate_closure_call_func($typeof($func), $hash, $vasplat);
+}
+
+
 module closure::evil_hack {Type1, Type2};
 
 const char INIT = '\0';
 
 macro Type1.exec(self, ...) => ((Type2)self[0])(self, $vasplat);
-

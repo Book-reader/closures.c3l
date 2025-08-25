@@ -523,3 +523,527 @@ $case 10:
 $endswitch
 return f;
 }
+module closure::closure_fn {Type};
+macro @generate_closure_call_func($OrigFnType, uint $hash, ...) @private
+{
+var $params = $OrigFnType.params;
+	$switch $OrigFnType.params.len:
+	$case 0:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 1:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 2:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 3:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 4:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 5:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$case 5:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 6:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$case 5:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, );
+			};
+			return f;
+		$case 6:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 7:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$case 5:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, );
+			};
+			return f;
+		$case 6:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, );
+			};
+			return f;
+		$case 7:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 8:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$case 5:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, );
+			};
+			return f;
+		$case 6:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, );
+			};
+			return f;
+		$case 7:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, );
+			};
+			return f;
+		$case 8:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, h, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, h, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 9:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$case 5:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, );
+			};
+			return f;
+		$case 6:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, );
+			};
+			return f;
+		$case 7:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, );
+			};
+			return f;
+		$case 8:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, h, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, h, );
+			};
+			return f;
+		$case 9:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), $typefrom($params[$vacount + 8]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, h, i, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, h, i, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$case 10:
+		$switch $OrigFnType.params.len - $vacount:
+		$case 0:
+		var $NewFnType = $typeof(fn Type() => unreachable());
+			$NewFnType f = fn ()
+			{
+				return closures[$hash]!!.exec();
+			};
+			return f;
+		$case 1:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), ) => unreachable());
+			$NewFnType f = fn (a, )
+			{
+				return closures[$hash]!!.exec(a, );
+			};
+			return f;
+		$case 2:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), ) => unreachable());
+			$NewFnType f = fn (a, b, )
+			{
+				return closures[$hash]!!.exec(a, b, );
+			};
+			return f;
+		$case 3:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, )
+			{
+				return closures[$hash]!!.exec(a, b, c, );
+			};
+			return f;
+		$case 4:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, );
+			};
+			return f;
+		$case 5:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, );
+			};
+			return f;
+		$case 6:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, );
+			};
+			return f;
+		$case 7:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, );
+			};
+			return f;
+		$case 8:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, h, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, h, );
+			};
+			return f;
+		$case 9:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), $typefrom($params[$vacount + 8]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, h, i, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, h, i, );
+			};
+			return f;
+		$case 10:
+		var $NewFnType = $typeof(fn Type($typefrom($params[$vacount + 0]), $typefrom($params[$vacount + 1]), $typefrom($params[$vacount + 2]), $typefrom($params[$vacount + 3]), $typefrom($params[$vacount + 4]), $typefrom($params[$vacount + 5]), $typefrom($params[$vacount + 6]), $typefrom($params[$vacount + 7]), $typefrom($params[$vacount + 8]), $typefrom($params[$vacount + 9]), ) => unreachable());
+			$NewFnType f = fn (a, b, c, d, e, f, g, h, i, j, )
+			{
+				return closures[$hash]!!.exec(a, b, c, d, e, f, g, h, i, j, );
+			};
+			return f;
+		$default:
+			$error "Unsupported number of function parameters";
+		$endswitch
+	$endswitch
+}
