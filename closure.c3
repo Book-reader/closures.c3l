@@ -36,7 +36,7 @@ macro @new($func, ...)
 {
 	var cl = closure::@new {Type} ($func, $vasplat);
 	if (!closures.is_initialized()) closures.tinit();
-	uint $hash = @str_hash(@sprintf("%s:%s", $$FILEPATH, $$LINE));
+	uint $hash = @str_hash(@sprintf("%s:%s:%s", $$FILEPATH, $$LINE, @rnd()));
 	closures.set($hash, cl);
 	return @generate_closure_call_func($typeof($func), $hash, $vasplat);
 }
