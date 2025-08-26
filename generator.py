@@ -1,54 +1,15 @@
-
-# for _ in range(10):
-#for i in range(10):
-#	for j in range(i - 1):
-#		ch = chr(97 + j);
-#		print(f"{ch}1 ", end = '')
-#	for k in range(i, 10 - i):
-#		ch = chr(97 + k);
-#		print(f"{ch}2 ", end = '')
-#	print()
 print("module closure;")
-print("macro @generate_closure($OrigFnType, $offset, ...) @private\n{")
-print("var $params = $OrigFnType.params;")
-print("$switch $OrigFnType.params.len:")
-for i in range(10 + 1):
-	print(f"$case {i}:")
-	print("\t$switch $OrigFnType.params.len - $vacount:")
-	for j in range(i + 1):
-		print(f"\t$case {j}:")
-		print("\t\tvar $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(Closure {$typefrom($OrigFnType.returns)}", end = '')
-		for k in range(j):
-			print(f", $typefrom($params[$vacount + {k}])", end = '')
-		print(") => unreachable());")
-		print("\t\tevil_hack::INIT{Closure {$typefrom($OrigFnType.returns)}, $NewFnType};")
-		print("\t\t$NewFnType f = fn (closure", end = '')
-		for k in range(j):
-			print(f", {chr(97 + k)}", end = '')
-		print(")\n\t\t{")
-		print("\t\t\treturn (($OrigFnType)closure[1])(", end = '')
-		for k in range(i - j):
-			print(f"*($typefrom($params[{k}])*)closure[$offset + {k}], ", end = '')
-		for k in range(j):
-			print(f"{chr(97 + k)}, ", end = '')
-		print(");")
-		print("\t\t};")
-	print("\t$default:")
-	print("""\t\t$error "Unsupported number of function parameters";""")
-	print("\t$endswitch")
-print("$endswitch")
-print("return f;")
-print("}")
+# print("import std::io;")
 
-print("macro @generate_closure_call_func($OrigFnType, uint $hash, ...) @private\n{")
-print("var $params = $OrigFnType.params;")
+print("macro @generate_closure_call_func($OrigFnType, usz $offset, ...) @private\n{")
+print("\tvar $params = $OrigFnType.params;")
 print("\t$switch $OrigFnType.params.len:")
 for i in range(10 + 1):
 	print(f"\t$case {i}:")
 	print("\t\t$switch $OrigFnType.params.len - $vacount:")
 	for j in range(i + 1):
 		print(f"\t\t$case {j}:")
-		print("\t\tvar $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(", end = '')
+		print("\t\t\tvar $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(", end = '')
 		for k in range(j):
 			print(f"$typefrom($params[$vacount + {k}]), ", end = '')
 		print(") => unreachable());")
@@ -56,11 +17,32 @@ for i in range(10 + 1):
 		for k in range(j):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(")\n\t\t\t{")
-		print("\t\t\t\treturn ((Closure {$typefrom($OrigFnType.returns)})closures[$hash]!!).exec(", end = '')
+		print("\t\t\t\tstatic void** closure_ptr;")
+		# print("\t\t\t\tio::printfn(\"closure_ptr: %s\", closure_ptr);")
+		# print("\t\t\t\t@sprintf(\"%s:%s:%s\", $$FILEPATH, $$LINE, @rnd());")
+		print("\t\t\t\tif (@unlikely(!closure_ptr))")
+		print("\t\t\t\t{")
+		print("\t\t\t\t\tassert(temp_closure_ptr);")
+		print("\t\t\t\t\tclosure_ptr = temp_closure_ptr;")
+		print("\t\t\t\t\ttemp_closure_ptr = null;")
+		print("\t\t\t\t\t$if types::flat_type($OrigFnType.returns) == void.typeid:")
+		print("\t\t\t\t\t\treturn;")
+		print("\t\t\t\t\t$else")
+		print("\t\t\t\t\t\treturn {};")
+		print("\t\t\t\t\t$endif")
+		print("\t\t\t\t}");
+		print("\t\t\treturn (($OrigFnType)closure_ptr[0])(", end = '')
+		for k in range(i - j):
+			print(f"*($typefrom($params[{k}])*)closure_ptr[$offset + {k}], ", end = '')
 		for k in range(j):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(");")
+		
 		print("\t\t\t};")
+		print("\t\t\tf(", end = '')
+		for k in range(j):
+			print("{}, ", end = '')
+		print(");")
 		print("\t\t\treturn f;")
 	print("\t\t$default:")
 	print("""\t\t\t$error "Unsupported number of function parameters";""")
