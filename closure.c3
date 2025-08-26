@@ -50,6 +50,9 @@ macro @new_copy(Allocator alloc, func, ...)
 macro @create_inner(Allocator alloc, void** data, func, char $action, ...) @private
 {
 	var $Func = $typeof(func);
+	$if $Func.paramsof.len > 10:
+		$error "This library does not support creating closures of functions with more than 10 parameters, modify this check and `generator.py` to change this";
+	$endif
 	assert(!temp_closure_ptr);
 	$if $vacount > $Func.paramsof.len:
 		$error @sprintf("Expected up to %s parameters but got %s", $Func.paramsof.len, $vacount);
