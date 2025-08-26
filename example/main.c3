@@ -35,12 +35,16 @@ fn int main(String[] args)
 	});
 	calc_something();
 
-	// You should pass heap allocated data to this otherwise it isn't thread safe
+	// You should pass a pointer to heap allocated data otherwise it isn't thread safe
 	Closure {IntFn} test = closure::@new(mem, &add3, &a, &&4);
 	defer test.free();
 	io::printfn("test: %s", test.func(6));
 
-	var other_test @safeinfer = closure::@new(tmem, test.func, &&5).func;
+	int b = 5;
+	// Copies 'b' onto tmem.
+	// If passed a variable by-value it will *not* update if the variable is modified
+	var other_test @safeinfer = closure::@new_copy(tmem, test.func, b).func;
+	b = 1000;
 	other_test();
 
 	return 0;
