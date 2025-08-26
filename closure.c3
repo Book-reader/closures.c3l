@@ -20,22 +20,41 @@ macro @new($func, ...)
 	return new;
 }
 
-module closure::closure_fn;
-import closure;
-import std::io;
-
 import std::collections::map;
+import std::collections::list;
 // TODO: try to find some way to get this to work with a List {Closure {Type}} instead.
 tlocal HashMap {uint, void**} closures;
-// tlocal List {Closure {Type}} closures_list;
+// tlocal List {void**} closures_list;
 
-macro @new($func, ...)
+macro @new_fn($func, ...)
 {
 	var cl = closure::@new($func, $vasplat);
 	if (!closures.is_initialized()) closures.tinit();
 	uint $hash = @str_hash(@sprintf("%s:%s:%s", $$FILEPATH, $$LINE, @rnd()));
 	closures.set($hash, (void**)cl);
+	// closures_list.push()
 	return @generate_closure_call_func($typeof($func), $hash, $vasplat);
+}
+
+macro @new_alloc(Allocator alloc, $func, ...)
+{
+	var $OrigFnType = $typeof($func);
+
+	const OFFSET = 3; // space for the exec function, the original function, and the allocator
+	var new = (Closure {$typefrom($OrigFnType.returns)})allocator::new_array(alloc, void*, $vacount + OFFSET);
+	$for var $i = 0; $i < $vacount; $i++:
+		$if $typeof($vaexpr[$i]).kindof != POINTER:
+			$error "All data passed to @new_alloc must be a pointer that is (ideally) heap allocated";
+		$endif
+		new[$i + OFFSET] = (void*)$vaexpr[$i];
+	$endfor
+	new[1] = (void*)$func;
+	new[2] = allocator::new(alloc, Allocator);
+	*(Allocator*)new[2] = alloc;
+
+	new[0] = (void*)@generate_closure($OrigFnType, OFFSET, $vasplat);
+
+	return new;
 }
 
 module closure::type {Type};

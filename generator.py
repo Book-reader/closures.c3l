@@ -40,8 +40,6 @@ print("$endswitch")
 print("return f;")
 print("}")
 
-print("module closure::closure_fn;")
-print("import closure::type;")
 print("macro @generate_closure_call_func($OrigFnType, uint $hash, ...) @private\n{")
 print("var $params = $OrigFnType.params;")
 print("\t$switch $OrigFnType.params.len:")

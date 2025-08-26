@@ -523,8 +523,6 @@ $case 10:
 $endswitch
 return f;
 }
-module closure::closure_fn;
-import closure::type;
 macro @generate_closure_call_func($OrigFnType, uint $hash, ...) @private
 {
 var $params = $OrigFnType.params;
