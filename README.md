@@ -1,7 +1,3 @@
 ## Closures in C3
 
-use the python script if you need to support more than 10 parameters
-
-> [!warning]
-> do not return these closures from the function that created them or use them across threads,
-> all their data is allocated on the stack and will break if the function that created them returns
+See [example/main.c3](./example/main.c3) for an example of usage and the doc comments in [closure.c3](./closure.c3) for a more detailed explanation of usage.
