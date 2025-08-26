@@ -8,7 +8,7 @@
 #		ch = chr(97 + k);
 #		print(f"{ch}2 ", end = '')
 #	print()
-print("module closure {Type};")
+print("module closure;")
 print("macro @generate_closure($OrigFnType, $offset, ...) @private\n{")
 print("var $params = $OrigFnType.params;")
 print("$switch $OrigFnType.params.len:")
@@ -17,11 +17,11 @@ for i in range(10 + 1):
 	print("\t$switch $OrigFnType.params.len - $vacount:")
 	for j in range(i + 1):
 		print(f"\t$case {j}:")
-		print("\t\tvar $NewFnType = $typeof(fn Type(Closure", end = '')
+		print("\t\tvar $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(Closure {$typefrom($OrigFnType.returns)}", end = '')
 		for k in range(j):
 			print(f", $typefrom($params[$vacount + {k}])", end = '')
 		print(") => unreachable());")
-		print("\t\tevil_hack::INIT{Closure, $NewFnType};")
+		print("\t\tevil_hack::INIT{Closure {$typefrom($OrigFnType.returns)}, $NewFnType};")
 		print("\t\t$NewFnType f = fn (closure", end = '')
 		for k in range(j):
 			print(f", {chr(97 + k)}", end = '')
@@ -40,7 +40,8 @@ print("$endswitch")
 print("return f;")
 print("}")
 
-print("module closure::closure_fn {Type};")
+print("module closure::closure_fn;")
+print("import closure::type;")
 print("macro @generate_closure_call_func($OrigFnType, uint $hash, ...) @private\n{")
 print("var $params = $OrigFnType.params;")
 print("\t$switch $OrigFnType.params.len:")
@@ -49,7 +50,7 @@ for i in range(10 + 1):
 	print("\t\t$switch $OrigFnType.params.len - $vacount:")
 	for j in range(i + 1):
 		print(f"\t\t$case {j}:")
-		print("\t\tvar $NewFnType = $typeof(fn Type(", end = '')
+		print("\t\tvar $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(", end = '')
 		for k in range(j):
 			print(f"$typefrom($params[$vacount + {k}]), ", end = '')
 		print(") => unreachable());")
@@ -57,7 +58,7 @@ for i in range(10 + 1):
 		for k in range(j):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(")\n\t\t\t{")
-		print("\t\t\t\treturn closures[$hash]!!.exec(", end = '')
+		print("\t\t\t\treturn ((Closure {$typefrom($OrigFnType.returns)})closures[$hash]!!).exec(", end = '')
 		for k in range(j):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(");")
