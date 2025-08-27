@@ -10,8 +10,9 @@ tlocal uptr code_len @private @nostrip @extern("code_len");
 tlocal uptr code_offset @private @nostrip @extern("code_offset");
 tlocal uptr code_arg_offset @private @nostrip @extern("code_arg_offset");
 tlocal uptr code_func_offset @private @nostrip @extern("code_func_offset");
+tlocal uptr returnaddr_offset @private @nostrip @extern("returnaddr_offset");
 tlocal usz allocated_size @private;
-tlocal char* closures_data @private @extern("closures_data");
+tlocal char* closures_data @private;
 tlocal uptr closure_offset @private;
 
 faultdef INIT_FAILED;
@@ -55,6 +56,13 @@ asm(`
 	mov rax, [code_arg_offset@GOTTPOFF + rip];
 	mov fs:[rax], rbx;
 
+	# Fifth, store the offset from the return location to the arg for use in the closure
+	lea rax, .start.arg;
+	lea rbx, .start.return_loc;
+	sub rbx, rax;
+	mov rax, [returnaddr_offset@GOTTPOFF + rip];
+	mov fs:[rax], rbx;
+
 	# Finally, store the offset of the stored function into code_func_offset and jump to end
 	lea rax, .start;
 	lea rbx, .start.func;
@@ -79,22 +87,24 @@ asm(`
 	.cfi_offset rbp, -16
 	mov rbp, rsp
 	 .cfi_def_cfa_register rbp
-	mov [rsp - 8], rsi;
-	mov [rsp - 16], rdi;
+	# mov [rsp - 8], rsi;
+	# mov [rsp - 16], rdi;
 
-	mov rsi, rdi;
-	mov rdi, [.start.arg + rip]; # This should be the linux calling convention register for the first integer function parameter
-	mov rax, [.start.func + rip];
-	call rax;
-
+	# mov rsi, rdi;
+	# mov rdi, [.start.arg + rip]; # This should be the linux calling convention register for the first integer function parameter
+	# mov rax, [.start.func + rip];
+	# call rax;
+	call [.start.func + rip];
+.start.return_loc:
 	# Restoring registers afterwards, hopefully correct
-	mov rsi, [rsp - 8];
-	mov rdi, [rsp - 16];
+	# mov rsi, [rsp - 8];
+	# mov rdi, [rsp - 16];
 	pop rbp;
 	.cfi_def_cfa rsp, 8
 	ret;
 .end:
 `);
+	io::printfn("return address offset is '%s'", returnaddr_offset);
 	allocated_size = vm::aligned_alloc_size(code_len);
 	// io::printfn("allocating %s bytes", allocated_size);
 	closures_data = posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
@@ -129,13 +139,11 @@ macro create(Allocator alloc, func, ...)
 	$endfor
 	cl_data[0] = (void*)func;
 	var $params = {};
-	usz $byte_off = 0;
 	$foreach $param : $Func.paramsof:
-		$params = $params +++ { {$param.type, $byte_off} };
-		$byte_off = $param.type.sizeof;
+		$params = $params +++ { $param.type};
 	$endforeach
 
-	var cl_func = closure::@generate_closure($Func, OFFSET, $params, $vasplat);
+	var cl_func = @generate_closure($Func, OFFSET, $params, $vasplat);
 
 	defer closure_offset += code_len + (uptr.alignof - code_len % uptr.alignof);
 
@@ -143,7 +151,9 @@ macro create(Allocator alloc, func, ...)
 
 	*(uptr*)(&closures_data[closure_offset + code_func_offset]) = (uptr)cl_func;
 	*(uptr*)(&closures_data[closure_offset + code_arg_offset]) = (uptr)cl_data;
-	var y = ($typeof(fn $typefrom($Func.returns)(int) => unreachable()))(void*)&closures_data[closure_offset + code_offset];
+	// io::printfn("Storing args at %p", (uptr*)(&closures_data[closure_offset + code_arg_offset]));
+	var y = ($typeof(cl_func))(void*)&closures_data[closure_offset + code_offset];
+	// $echo $typeof(y).nameof;
 	return y;
 }
 
