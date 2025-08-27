@@ -13,8 +13,9 @@ fn int add3(int a, int b, int c)
 alias IntFn = fn int(int);
 alias VoidFn = fn void();
 
-tlocal void* code_ptr @extern("code_ptr__");
-tlocal uptr code_len @extern("code_len__");
+tlocal void* code_ptr @extern("code_ptr");
+tlocal uptr code_len @extern("code_len");
+tlocal uptr code_offset @extern("code_offset");
 
 fn void print_something() @nostrip @extern("print_something")// @naked
 {
@@ -32,48 +33,39 @@ asm(`
 	pushq %rax;
 	pushq %rbx;
 
-	# First, load the address of "start:" into "code_ptr__"
-	movq code_ptr__@GOTTPOFF(%rip), %rax;
-	leaq .start.exec, %rbx;
+	# First, load the address of "start:" into "code_ptr"
+	leaq .start, %rbx;
+	movq code_ptr@GOTTPOFF(%rip), %rax;
 	movq %rbx, %fs:(%rax)
 
 	# Second, get the length of the assembly in bytes
-	leaq .start.exec, %rax;
+	leaq .start, %rax;
 	leaq .end, %rbx;
 	subq %rax, %rbx;
-
-	movq code_len__@GOTTPOFF(%rip), %rax;
+	movq code_len@GOTTPOFF(%rip), %rax;
 	movq %rbx, %fs:(%rax);
+
+	# Finally, store the offset of the data into code_offset and jump to end
+	leaq .start.data, %rax;
+	leaq .start.exec, %rbx;
+	subq %rax, %rbx;
+	movq code_offset@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
 	jmp .end;
 
 .start:
 .start.data:
-	.quad 0
+	.quad 0x1f1f1f1f1f
 .start.exec:
-	# retq;
-	# movq $$0xa1a1a1a1a1a1a1, %rax;
-	#movq $$0, %rax;
-	#jmp m16 %rax;
-	# pushq .end1;
-	# retq;
-	# jmps .end1;
-	# mov (%rsp), %rax;
-	# sub print_something@PLT %rax
 	leaq print_something, %rax;
-	# movq $$0, %rax;
-	# callq *%rax;
-	# call print_something@PLT;
-	# jmp *print_something;
-	jmpq *%rax;
+	callq *%rax;
 	retq;
-	# jmp .end1;
 .end:
 	popq %rbx;
 	popq %rax;
-.end1:
-	nop;
 `);
-	io::printfn("code ptr: %s, code len: %s", code_ptr, code_len);
+	io::printfn("code ptr: %s, code len: %s, code_offset: %s", code_ptr, code_len, code_offset);
 	// VoidFn f = (VoidFn)code_ptr;
 /*	char* dat = mem::new_array(char, code_len);
 	dat[:code_len] = ((char*)code_ptr)[:code_len];
@@ -94,7 +86,7 @@ asm(`
 		return 1;
 	}
 	((char*)fn_data)[:code_len] = ((char*)code_ptr)[:code_len];
-	VoidFn f = (VoidFn)fn_data;
+	VoidFn f = (VoidFn)(void*)&((char*)fn_data)[code_offset];
 	io::printfn("fn_data: %p, f: %p", fn_data, f);
 	f();
 	posix::munmap(fn_data, allocated_size);
