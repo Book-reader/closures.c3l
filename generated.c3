@@ -1,4 +1,4 @@
-module closure;
+module closures::closure;
 macro @generate_closure_call_func($OrigFnType, usz $offset, ...) @private
 {
 	var $params = {};
@@ -1383,7 +1383,8 @@ macro @generate_closure_call_func($OrigFnType, usz $offset, ...) @private
 		$endswitch
 	$endswitch
 }
-module closure::closures;
+module closures::closure;
+import closures @public;
 macro @generate_closure($OrigFnType, $offset, $params, ...) @private
 {
 $switch $params.len:

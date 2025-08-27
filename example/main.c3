@@ -1,5 +1,5 @@
 module main;
-import closure;
+import closures;
 import std::io;
 import std::os::posix;
 import std::os::backtrace;
@@ -31,6 +31,7 @@ fn String print(String fmt, int i)
 	return string::tformat(fmt, i);
 }
 
+// TODO: this is two slightly different bugs. one with `movl [c], $eax` and one with `movl c, $eax;`
 /*fn int test1(int, int) @nostrip
 {
 	int a, b;
@@ -45,7 +46,6 @@ fn String print(String fmt, int i)
 	io::printfn("a: %s, b: %s", a, b);*/
 	// asm("ret");
 	a = 123;
-	// TODO: this is two different bugs. one with `movl [c], $eax` and one with `movl c, $eax;`
 	defer
 	{
 		int c;
@@ -79,64 +79,15 @@ fn int main(String[] args)
 	defer closures::deinit();
 
 
-/*	int i = 0;
-	IntString f = closures::create(tmem, &print, &&"foo %s");
-	$echo IntString.paramsof.len;
-	for (; i < 10; i++)
-	{
-		// IntString f1 = closures::create(tmem, fn int(int a, int b) => a + b, &i);
-		io::printfn("f(0) = %s", f(i));
-	}*/
-
 	int a = 1;
-	var fmt @safeinfer = closures::create(tmem, fn String(int a, usz b, String c) => string::tformat("a: %s, b: %s, c: %s", a, b, c), &a);
+	var fmt @safeinfer = closure::new(fn String(int a, usz b, String c) => string::tformat("a: %s, b: %s, c: %s", a, b, c), &a);
+	defer closure::free(fmt);
 	io::printn(fmt(1, "hello"));
 	a = 4;
-	var fmt1 @safeinfer = closures::create(tmem, fmt, &&1234ul);
+	var fmt1 @safeinfer = closure::new(fmt, &&1234ul);
+	defer closure::free(fmt1);
 	io::printn(fmt1("world!"));
 
-	// print_something() @noinline;
-//	io::printfn("In main!");
-//	code_len = 2;
-/*
-//	io::printfn("code ptr: %s, code len: %s, code_offset: %s, code_arg_offset: %s, code_func_offset: %s", code_ptr, code_len, code_offset, code_arg_offset, code_func_offset);
-	// It's probably a bad idea to map a new page for each closure, I should make sure to reuse them
-	int a = 1;
-	IntFn add1 = closure::@on_stack(&add3, a, 2);
-	io::printfn(" = %s", add1(3));
-	a = 5;
-	io::printfn(" = %s", add1(3));
-
-	var calc_something @safeinfer = closure::@on_stack(fn void(int* a, IntFn add1)
-	{
-		*a += 1;
-		io::printfn(" = %s", add1(1));
-		return;
-	}, &a, add1);
-
-	calc_something();
-	calc_something();
-
-
-	add1 = closure::@on_stack(fn int(int a)
-	{
-		io::printfn("%s", a);
-		return a;
-	});
-	calc_something();
-
-	// You should pass a pointer to heap allocated data otherwise it isn't thread safe
-	Closure {IntFn} test = closure::@new(mem, &add3, &a, &&4);
-	defer test.free();
-	io::printfn("test: %s", test.func(6));
-
-	int b = 5;
-	// Copies 'b' onto tmem.
-	// If passed a variable by-value it will *not* update if the variable is modified
-	var other_test @safeinfer = closure::@new_copy(tmem, test.func, b).func;
-	b = 1000;
-	other_test();
-*/
 	return 0;
 }
 

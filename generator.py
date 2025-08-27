@@ -1,4 +1,4 @@
-print("module closure;")
+print("module closures::closure;")
 # print("import std::io;")
 
 print("macro @generate_closure_call_func($OrigFnType, usz $offset, ...) @private\n{")
@@ -58,7 +58,8 @@ print("}")
 # print("return fn $typefrom($OrigFnType.returns)(void** wrapped, void** passed)")
 # print("}")
 
-print("module closure::closures;")
+print("module closures::closure;")
+print("import closures @public;")
 # print("import std::io;")
 print("macro @generate_closure($OrigFnType, $offset, $params, ...) @private\n{")
 print("$switch $params.len:")
