@@ -20,7 +20,11 @@ tlocal uptr code_offset @extern("code_offset");
 fn void print_something() @nostrip @extern("print_something")// @naked
 {
 	io::printfn("Hello from assembly!");
-//	asm("ret;");
+}
+
+fn void print_something_else() @nostrip
+{
+	io::printfn("Hello Again!");
 }
 
 fn int main(String[] args)
@@ -57,6 +61,8 @@ asm(`
 .start:
 .start.data:
 	.quad 0
+.start.func:
+	.quad 0
 .start.exec:
 	pushq %rax;
 	movq .start.data(%rip), %rax;
@@ -84,6 +90,9 @@ asm(`
 	VoidFn f = (VoidFn)(void*)&fn_data[code_offset];
 	io::printfn("fn_data: %p, f: %p", fn_data, f);
 	f();
+	*(uptr*)fn_data = (uptr)&print_something_else;
+	f();
+
 	posix::munmap(fn_data, allocated_size);
 
 	int a = 1;
