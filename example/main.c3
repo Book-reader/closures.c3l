@@ -92,7 +92,8 @@ fn int main(String[] args)
 	var fmt @safeinfer = closures::create(tmem, fn String(int a, usz b, String c) => string::tformat("a: %s, b: %s, c: %s", a, b, c), &a);
 	io::printn(fmt(1, "hello"));
 	a = 4;
-	io::printn(fmt(1, "hello"));
+	var fmt1 @safeinfer = closures::create(tmem, fmt, &&1234ul);
+	io::printn(fmt1("world!"));
 
 	// print_something() @noinline;
 //	io::printfn("In main!");

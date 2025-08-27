@@ -87,18 +87,8 @@ asm(`
 	.cfi_offset rbp, -16
 	mov rbp, rsp
 	 .cfi_def_cfa_register rbp
-	# mov [rsp - 8], rsi;
-	# mov [rsp - 16], rdi;
-
-	# mov rsi, rdi;
-	# mov rdi, [.start.arg + rip]; # This should be the linux calling convention register for the first integer function parameter
-	# mov rax, [.start.func + rip];
-	# call rax;
 	call [.start.func + rip];
 .start.return_loc:
-	# Restoring registers afterwards, hopefully correct
-	# mov rsi, [rsp - 8];
-	# mov rdi, [rsp - 16];
 	pop rbp;
 	.cfi_def_cfa rsp, 8
 	ret;
