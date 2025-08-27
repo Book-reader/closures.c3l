@@ -16,15 +16,18 @@ alias VoidFn = fn void();
 tlocal void* code_ptr @extern("code_ptr");
 tlocal uptr code_len @extern("code_len");
 tlocal uptr code_offset @extern("code_offset");
+tlocal uptr code_arg_offset @extern("code_arg_offset");
+tlocal uptr code_func_offset @extern("code_func_offset");
 
-fn void print_something() @nostrip @extern("print_something")// @naked
+fn void print_something(void* dat) @nostrip @extern("print_something")// @naked
 {
-	io::printfn("Hello from assembly!");
+	io::printn("abc");
+	io::printfn("Hello from assembly: %p", dat);
 }
 
-fn void print_something_else() @nostrip
+fn void print_something_else(void* dat) @nostrip
 {
-	io::printfn("Hello Again!");
+	io::printfn("Hello Again!: %p", dat);
 }
 
 fn int main(String[] args)
@@ -49,31 +52,48 @@ asm(`
 	movq code_len@GOTTPOFF(%rip), %rax;
 	movq %rbx, %fs:(%rax);
 
-	# Finally, store the offset of the data into code_offset and jump to end
-	leaq .start.data, %rax;
-	leaq .start.exec, %rbx;
+	# Third, store the offset of the code into code_offset
+	leaq .start, %rax;
+	leaq .start.code, %rbx;
 	subq %rax, %rbx;
 	movq code_offset@GOTTPOFF(%rip), %rax;
 	movq %rbx, %fs:(%rax);
 
+	# Fourth, store the offset of the data into code_arg_offset and jump to end
+	leaq .start, %rax;
+	leaq .start.arg, %rbx;
+	subq %rax, %rbx;
+	movq code_arg_offset@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
+	# Finally, store the offset of the data into code_func_offset and jump to end
+	leaq .start, %rax;
+	leaq .start.func, %rbx;
+	subq %rax, %rbx;
+	movq code_func_offset@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
+	popq %rbx;
+	popq %rax;
 	jmp .end;
 
 .start:
-.start.data:
+.start.arg:
 	.quad 0
 .start.func:
 	.quad 0
-.start.exec:
+.start.code:
 	pushq %rax;
-	movq .start.data(%rip), %rax;
+	# pushq %rdi;
+	movq .start.arg(%rip), %rdi; # This should be the linux calling convention register for the first integer function parameter
+	movq .start.func(%rip), %rax;
 	callq *%rax;
+	# popq %rdi;
 	popq %rax;
 	retq;
 .end:
-	popq %rbx;
-	popq %rax;
 `);
-	io::printfn("code ptr: %s, code len: %s, code_offset: %s", code_ptr, code_len, code_offset);
+	io::printfn("code ptr: %s, code len: %s, code_offset: %s, code_arg_offset: %s, code_func_offset: %s", code_ptr, code_len, code_offset, code_arg_offset, code_func_offset);
 
 	// It's probably a bad idea to map a new page for each closure, I should make sure to reuse them
 	usz allocated_size = vm::aligned_alloc_size(code_len);
@@ -85,12 +105,13 @@ asm(`
 		return 1;
 	}
 	fn_data[:code_len] = ((char*)code_ptr)[:code_len];
-	*(uptr*)fn_data = (uptr)&print_something;
+	*(uptr*)&fn_data[code_func_offset] = (uptr)&print_something;
+	*(uptr*)&fn_data[code_arg_offset] = (uptr)0x12345;
 
 	VoidFn f = (VoidFn)(void*)&fn_data[code_offset];
-	io::printfn("fn_data: %p, f: %p", fn_data, f);
+	io::printfn("fn_data: %.16x, actual: %.16x, f: %p", *(uptr*)&fn_data[code_func_offset], &print_something, f);
 	f();
-	*(uptr*)fn_data = (uptr)&print_something_else;
+	*(uptr*)&fn_data[code_func_offset] = (uptr)&print_something_else;
 	f();
 
 	posix::munmap(fn_data, allocated_size);
