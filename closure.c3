@@ -25,44 +25,45 @@ fn void? init()
 		$echo @sprintf("WARNING: closures have not been tested to work on %s, things may not function properly", env::OS_TYPE);
 	$endif
 asm(`
-	pushq %rax;
-	pushq %rbx;
+.intel_syntax
+	push rax;
+	push rbx;
 
 	# First, load the address of "start:" into "code_ptr"
-	leaq .start, %rbx;
-	movq code_ptr@GOTTPOFF(%rip), %rax;
-	movq %rbx, %fs:(%rax)
+	lea rbx, .start;
+	mov  rax, [code_ptr@GOTTPOFF + rip];
+	mov fs:[rax], rbx;
 
 	# Second, get the length of the assembly in bytes
-	leaq .start, %rax;
-	leaq .end, %rbx;
-	subq %rax, %rbx;
-	movq code_len@GOTTPOFF(%rip), %rax;
-	movq %rbx, %fs:(%rax);
+	lea rax, .start;
+	lea rbx, .end;
+	sub rbx, rax;
+	mov rax, [code_len@GOTTPOFF + rip];
+	mov fs:[rax], rbx;
 
 	# Third, store the offset of the code into code_offset
-	leaq .start, %rax;
-	leaq .start.code, %rbx;
-	subq %rax, %rbx;
-	movq code_offset@GOTTPOFF(%rip), %rax;
-	movq %rbx, %fs:(%rax);
+	lea rax, .start;
+	lea rbx, .start.code;
+	sub rbx, rax;
+	mov rax, [code_offset@GOTTPOFF + rip];
+	mov fs:[rax], rbx;
 
 	# Fourth, store the offset of the data into code_arg_offset and jump to end
-	leaq .start, %rax;
-	leaq .start.arg, %rbx;
-	subq %rax, %rbx;
-	movq code_arg_offset@GOTTPOFF(%rip), %rax;
-	movq %rbx, %fs:(%rax);
+	lea rax, .start;
+	lea rbx, .start.arg;
+	sub rbx, rax;
+	mov rax, [code_arg_offset@GOTTPOFF + rip];
+	mov fs:[rax], rbx;
 
 	# Finally, store the offset of the data into code_func_offset and jump to end
-	leaq .start, %rax;
-	leaq .start.func, %rbx;
-	subq %rax, %rbx;
-	movq code_func_offset@GOTTPOFF(%rip), %rax;
-	movq %rbx, %fs:(%rax);
+	lea rax, .start;
+	lea rbx, .start.func;
+	sub rbx, rax;
+	mov rax, [code_func_offset@GOTTPOFF + rip];
+	mov fs:[rax], rbx;
 
-	popq %rbx;
-	popq %rax;
+	pop rbx;
+	pop rax;
 	jmp .end;
 
 .start:
@@ -70,7 +71,6 @@ asm(`
 	.quad 0
 .start.func:
 	.quad 0
-.intel_syntax
 	.p2align 4
 .start.code:
 	# Some boilerplate stuff for saving the stack pointer & registers, hopefully it's correct otherwise it'll just randomly break depending on what the compiler does with registers
