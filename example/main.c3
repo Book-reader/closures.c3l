@@ -56,37 +56,32 @@ asm(`
 
 .start:
 .start.data:
-	.quad 0x1f1f1f1f1f
+	.quad 0
 .start.exec:
-	leaq print_something, %rax;
+	pushq %rax;
+	movq .start.data(%rip), %rax;
 	callq *%rax;
+	popq %rax;
 	retq;
 .end:
 	popq %rbx;
 	popq %rax;
 `);
 	io::printfn("code ptr: %s, code len: %s, code_offset: %s", code_ptr, code_len, code_offset);
-	// VoidFn f = (VoidFn)code_ptr;
-/*	char* dat = mem::new_array(char, code_len);
-	dat[:code_len] = ((char*)code_ptr)[:code_len];
-	assert (dat[:code_len] == ((char*)code_ptr)[:code_len]);
-	// io::printfn("%s", dat[:code_len]);
-	// char[] dat = ((char*)code_ptr)[:code_len];
-	VoidFn f = (VoidFn)(void*)dat;
-	io::printfn("new pointer: %p", f);
-	f();*/
 
 	// It's probably a bad idea to map a new page for each closure, I should make sure to reuse them
 	usz allocated_size = vm::aligned_alloc_size(code_len);
 	io::printfn("allocating %s bytes", allocated_size);
-	void* fn_data = posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
+	char* fn_data = posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
 	if (fn_data == posix::MAP_FAILED)
 	{
 		io::printfn("error: %s", libc::errno());
 		return 1;
 	}
-	((char*)fn_data)[:code_len] = ((char*)code_ptr)[:code_len];
-	VoidFn f = (VoidFn)(void*)&((char*)fn_data)[code_offset];
+	fn_data[:code_len] = ((char*)code_ptr)[:code_len];
+	*(uptr*)fn_data = (uptr)&print_something;
+
+	VoidFn f = (VoidFn)(void*)&fn_data[code_offset];
 	io::printfn("fn_data: %p, f: %p", fn_data, f);
 	f();
 	posix::munmap(fn_data, allocated_size);
