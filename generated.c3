@@ -1404,7 +1404,7 @@ $case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
@@ -1421,13 +1421,13 @@ $case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
@@ -1444,19 +1444,19 @@ $case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
@@ -1473,25 +1473,25 @@ $case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
@@ -1508,31 +1508,31 @@ $case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, d, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4])) => unreachable());
@@ -1549,37 +1549,37 @@ $case 6:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, c, d, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, d, e, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5])) => unreachable());
@@ -1596,43 +1596,43 @@ $case 7:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, b, c, d, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, c, d, e, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, d, e, f, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6])) => unreachable());
@@ -1649,49 +1649,49 @@ $case 8:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], *($typefrom($params[7][0])*)&args[$offset + 7], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], *($typefrom($params[7][0])*)args[$offset + 7], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], a, b, c, d, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, b, c, d, e, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, c, d, e, f, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f, g)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, d, e, f, g, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, d, e, f, g, );
 		};
 	$case 8:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6]), $typefrom($fn_params[$vacount + 7])) => unreachable());
@@ -1708,55 +1708,55 @@ $case 9:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], *($typefrom($params[7][0])*)&args[$offset + 7], *($typefrom($params[8][0])*)&args[$offset + 8], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], *($typefrom($params[7][0])*)args[$offset + 7], *($typefrom($params[8][0])*)args[$offset + 8], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], *($typefrom($params[7][0])*)&args[$offset + 7], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], *($typefrom($params[7][0])*)args[$offset + 7], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], a, b, c, d, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], a, b, c, d, e, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, b, c, d, e, f, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f, g)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, c, d, e, f, g, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, c, d, e, f, g, );
 		};
 	$case 8:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6]), $typefrom($fn_params[$vacount + 7])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f, g, h)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, d, e, f, g, h, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, d, e, f, g, h, );
 		};
 	$case 9:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6]), $typefrom($fn_params[$vacount + 7]), $typefrom($fn_params[$vacount + 8])) => unreachable());
@@ -1773,61 +1773,61 @@ $case 10:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**) => unreachable());
 		$NewFnType f = fn (args)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], *($typefrom($params[7][0])*)&args[$offset + 7], *($typefrom($params[8][0])*)&args[$offset + 8], *($typefrom($params[9][0])*)&args[$offset + 9], );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], *($typefrom($params[7][0])*)args[$offset + 7], *($typefrom($params[8][0])*)args[$offset + 8], *($typefrom($params[9][0])*)args[$offset + 9], );
 		};
 	$case 1:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0])) => unreachable());
 		$NewFnType f = fn (args, a)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], *($typefrom($params[7][0])*)&args[$offset + 7], *($typefrom($params[8][0])*)&args[$offset + 8], a, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], *($typefrom($params[7][0])*)args[$offset + 7], *($typefrom($params[8][0])*)args[$offset + 8], a, );
 		};
 	$case 2:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1])) => unreachable());
 		$NewFnType f = fn (args, a, b)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], *($typefrom($params[7][0])*)&args[$offset + 7], a, b, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], *($typefrom($params[7][0])*)args[$offset + 7], a, b, );
 		};
 	$case 3:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2])) => unreachable());
 		$NewFnType f = fn (args, a, b, c)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], *($typefrom($params[6][0])*)&args[$offset + 6], a, b, c, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], *($typefrom($params[6][0])*)args[$offset + 6], a, b, c, );
 		};
 	$case 4:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], *($typefrom($params[5][0])*)&args[$offset + 5], a, b, c, d, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], *($typefrom($params[5][0])*)args[$offset + 5], a, b, c, d, );
 		};
 	$case 5:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], *($typefrom($params[4][0])*)&args[$offset + 4], a, b, c, d, e, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], *($typefrom($params[4][0])*)args[$offset + 4], a, b, c, d, e, );
 		};
 	$case 6:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], *($typefrom($params[3][0])*)&args[$offset + 3], a, b, c, d, e, f, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], *($typefrom($params[3][0])*)args[$offset + 3], a, b, c, d, e, f, );
 		};
 	$case 7:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f, g)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], *($typefrom($params[2][0])*)&args[$offset + 2], a, b, c, d, e, f, g, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], *($typefrom($params[2][0])*)args[$offset + 2], a, b, c, d, e, f, g, );
 		};
 	$case 8:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6]), $typefrom($fn_params[$vacount + 7])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f, g, h)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], *($typefrom($params[1][0])*)&args[$offset + 1], a, b, c, d, e, f, g, h, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], *($typefrom($params[1][0])*)args[$offset + 1], a, b, c, d, e, f, g, h, );
 		};
 	$case 9:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6]), $typefrom($fn_params[$vacount + 7]), $typefrom($fn_params[$vacount + 8])) => unreachable());
 		$NewFnType f = fn (args, a, b, c, d, e, f, g, h, i)
 		{
-			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)&args[$offset + 0], a, b, c, d, e, f, g, h, i, );
+			return (($OrigFnType)args[0])(*($typefrom($params[0][0])*)args[$offset + 0], a, b, c, d, e, f, g, h, i, );
 		};
 	$case 10:
 		var $NewFnType = $typeof(fn $typefrom($OrigFnType.returns)(void**, $typefrom($fn_params[$vacount + 0]), $typefrom($fn_params[$vacount + 1]), $typefrom($fn_params[$vacount + 2]), $typefrom($fn_params[$vacount + 3]), $typefrom($fn_params[$vacount + 4]), $typefrom($fn_params[$vacount + 5]), $typefrom($fn_params[$vacount + 6]), $typefrom($fn_params[$vacount + 7]), $typefrom($fn_params[$vacount + 8]), $typefrom($fn_params[$vacount + 9])) => unreachable());

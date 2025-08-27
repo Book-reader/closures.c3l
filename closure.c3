@@ -12,7 +12,7 @@ tlocal uptr code_arg_offset @private @nostrip @extern("code_arg_offset");
 tlocal uptr code_func_offset @private @nostrip @extern("code_func_offset");
 tlocal usz allocated_size @private;
 tlocal char* closures_data @private @extern("closures_data");
-tlocal usz closure_count @private;
+tlocal uptr closure_offset @private;
 
 faultdef INIT_FAILED;
 
@@ -70,18 +70,29 @@ asm(`
 	.quad 0
 .start.func:
 	.quad 0
+.intel_syntax
+	.p2align 4
 .start.code:
-	retq;
-	pushq %rax;
-	# TODO: why does pushing and popping %rdi cause it to break?
-	# pushq %rdi;
-	movq %rdi, %rsi;
-	movq .start.arg(%rip), %rdi; # This should be the linux calling convention register for the first integer function parameter
-	movq .start.func(%rip), %rax;
-	callq *%rax;
-	# popq %rdi;
-	popq %rax;
-	retq;
+	# Some boilerplate stuff for saving the stack pointer & registers, hopefully it's correct otherwise it'll just randomly break depending on what the compiler does with registers
+	push rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset rbp, -16
+	mov rbp, rsp
+	 .cfi_def_cfa_register rbp
+	mov [rsp - 8], rsi;
+	mov [rsp - 16], rdi;
+
+	mov rsi, rdi;
+	mov rdi, [.start.arg + rip]; # This should be the linux calling convention register for the first integer function parameter
+	mov rax, [.start.func + rip];
+	call rax;
+
+	# Restoring registers afterwards, hopefully correct
+	mov rsi, [rsp - 8];
+	mov rdi, [rsp - 16];
+	pop rbp;
+	.cfi_def_cfa rsp, 8
+	ret;
 .end:
 `);
 	allocated_size = vm::aligned_alloc_size(code_len);
@@ -91,6 +102,10 @@ asm(`
 	{
 		io::printfn("error: %s", libc::errno());
 		return INIT_FAILED?;
+	}
+	if ((uptr)closures_data % uptr.alignof != 0)
+	{
+		closure_offset = uptr.alignof - (uptr)closures_data % uptr.alignof;
 	}
 	/*closures_data[:code_len] = ((char*)code_ptr)[:code_len];
 	*(uptr*)&closures_data[code_func_offset] = (uptr)&print_something;
@@ -112,7 +127,7 @@ fn void deinit()
 
 macro create(Allocator alloc, func, ...)
 {
-	defer closure_count ++;
+	// defer closure_count ++;
 	// var cl = closure::@new_copy(mem, func, $vasplat);
 	var $Func = $typeof(func);
 	const OFFSET = 1;
@@ -135,16 +150,17 @@ macro create(Allocator alloc, func, ...)
 	var cl_func = closure::@generate_closure($Func, OFFSET, $params, $vasplat);
 
 	$echo $typeof(cl_func).nameof;
-	uptr closure_start = closure_count * code_len;
-	io::printfn("before: %s, %s", closure_start, closure_start % 8);
-	closure_start += uptr.sizeof - closure_start % uptr.sizeof;
+	// uptr closure_start = closure_count * code_len;
+	// io::printfn("before: %s, %s", closure_start, closure_start % 8);
+	// closure_start += uptr.sizeof - closure_start % uptr.sizeof;
+	defer closure_offset += code_len + (uptr.alignof - code_len % uptr.alignof);
 
-	io::printfn("after: %s, %s", closure_start, closure_start % 8);
-	closures_data[closure_start:code_len] = ((char*)code_ptr)[:code_len];
+	// io::printfn("after: %s, %s", closure_start, closure_start % 8);
+	closures_data[closure_offset:code_len] = ((char*)code_ptr)[:code_len];
 
-	*(uptr*)(&closures_data[closure_start + code_func_offset]) = (uptr)cl_func;
-	*(uptr*)(&closures_data[closure_start + code_arg_offset]) = (uptr)cl_data;
-	var y = ($typeof(fn int(int) => 0))(void*)&closures_data[closure_start + code_offset];
+	*(uptr*)(&closures_data[closure_offset + code_func_offset]) = (uptr)cl_func;
+	*(uptr*)(&closures_data[closure_offset + code_arg_offset]) = (uptr)cl_data;
+	var y = ($typeof(fn int(int) => 0))(void*)&closures_data[closure_offset + code_offset];
 	return y;
 }
 

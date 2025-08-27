@@ -6,7 +6,7 @@ import libc;
 
 fn int add3(int a, int b, int c)
 {
-	io::printfn("%s + %s + %s", a, b, c);
+	io::printfn("%s + %s + %s = %s", a, b, c, a + b + c);
 	return a + b + c;
 }
 

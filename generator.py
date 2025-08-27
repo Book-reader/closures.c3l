@@ -73,7 +73,7 @@ for i in range(10 + 1):
 		print(")\n\t\t{")
 		print("\t\t\treturn (($OrigFnType)args[0])(", end = '')
 		for k in range(i - j):
-			print(f"*($typefrom($params[{k}][0])*)&args[$offset + {k}], ", end = '')
+			print(f"*($typefrom($params[{k}][0])*)args[$offset + {k}], ", end = '')
 		for k in range(j):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(");")
