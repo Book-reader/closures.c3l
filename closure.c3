@@ -48,14 +48,14 @@ asm(`
 	mov rax, [code_offset@GOTTPOFF + rip];
 	mov fs:[rax], rbx;
 
-	# Fourth, store the offset of the data into code_arg_offset
+	# Fourth, store the offset of the stored parameter into code_arg_offset
 	lea rax, .start;
 	lea rbx, .start.arg;
 	sub rbx, rax;
 	mov rax, [code_arg_offset@GOTTPOFF + rip];
 	mov fs:[rax], rbx;
 
-	# Finally, store the offset of the data into code_func_offset and jump to end
+	# Finally, store the offset of the stored function into code_func_offset and jump to end
 	lea rax, .start;
 	lea rbx, .start.func;
 	sub rbx, rax;
