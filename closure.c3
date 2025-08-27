@@ -1,3 +1,153 @@
+module closure::closures;
+import closure @public;
+
+import std::io;
+import std::os::posix;
+import libc;
+
+tlocal void* code_ptr @private @nostrip @extern("code_ptr");
+tlocal uptr code_len @private @nostrip @extern("code_len");
+tlocal uptr code_offset @private @nostrip @extern("code_offset");
+tlocal uptr code_arg_offset @private @nostrip @extern("code_arg_offset");
+tlocal uptr code_func_offset @private @nostrip @extern("code_func_offset");
+tlocal usz allocated_size @private;
+tlocal char* closures_data @private @extern("closures_data");
+tlocal usz closure_count @private;
+
+faultdef INIT_FAILED;
+
+fn void? init()
+{
+	$if env::ARCH_TYPE != X86_64:
+		$error @sprintf("Currently closures do not support architecture %s", env::ARCH_TYPE);
+	$endif
+	$if env::OS_TYPE != LINUX:
+		$echo @sprintf("WARNING: closures have not been tested to work on %s, things may not function properly", env::OS_TYPE);
+	$endif
+asm(`
+	pushq %rax;
+	pushq %rbx;
+
+	# First, load the address of "start:" into "code_ptr"
+	leaq .start, %rbx;
+	movq code_ptr@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax)
+
+	# Second, get the length of the assembly in bytes
+	leaq .start, %rax;
+	leaq .end, %rbx;
+	subq %rax, %rbx;
+	movq code_len@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
+	# Third, store the offset of the code into code_offset
+	leaq .start, %rax;
+	leaq .start.code, %rbx;
+	subq %rax, %rbx;
+	movq code_offset@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
+	# Fourth, store the offset of the data into code_arg_offset and jump to end
+	leaq .start, %rax;
+	leaq .start.arg, %rbx;
+	subq %rax, %rbx;
+	movq code_arg_offset@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
+	# Finally, store the offset of the data into code_func_offset and jump to end
+	leaq .start, %rax;
+	leaq .start.func, %rbx;
+	subq %rax, %rbx;
+	movq code_func_offset@GOTTPOFF(%rip), %rax;
+	movq %rbx, %fs:(%rax);
+
+	popq %rbx;
+	popq %rax;
+	jmp .end;
+
+.start:
+.start.arg:
+	.quad 0
+.start.func:
+	.quad 0
+.start.code:
+	retq;
+	pushq %rax;
+	# TODO: why does pushing and popping %rdi cause it to break?
+	# pushq %rdi;
+	movq %rdi, %rsi;
+	movq .start.arg(%rip), %rdi; # This should be the linux calling convention register for the first integer function parameter
+	movq .start.func(%rip), %rax;
+	callq *%rax;
+	# popq %rdi;
+	popq %rax;
+	retq;
+.end:
+`);
+	allocated_size = vm::aligned_alloc_size(code_len);
+	// io::printfn("allocating %s bytes", allocated_size);
+	closures_data = posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
+	if (closures_data == posix::MAP_FAILED)
+	{
+		io::printfn("error: %s", libc::errno());
+		return INIT_FAILED?;
+	}
+	/*closures_data[:code_len] = ((char*)code_ptr)[:code_len];
+	*(uptr*)&closures_data[code_func_offset] = (uptr)&print_something;
+	*(uptr*)&closures_data[code_arg_offset] = (uptr)0x12345;
+
+	VoidFn f = (VoidFn)(void*)&closures_data[code_offset];
+	io::printfn("closures_data: %.16x, actual: %.16x, f: %p", *(uptr*)&closures_data[code_func_offset], &print_something, f);
+	f();
+	*(uptr*)&closures_data[code_func_offset] = (uptr)&print_something_else;
+	f();*/
+
+}
+
+fn void deinit()
+{
+	posix::munmap(closures_data, allocated_size);
+	closures_data = null;
+}
+
+macro create(Allocator alloc, func, ...)
+{
+	defer closure_count ++;
+	// var cl = closure::@new_copy(mem, func, $vasplat);
+	var $Func = $typeof(func);
+	const OFFSET = 1;
+	void** cl_data = allocator::alloc_array(alloc, void*, $vacount + OFFSET);
+
+	$for var $i = 0; $i < $vacount; $i++:
+		$if $typeof($vaexpr[$i]).typeid != $typefrom($Func.paramsof[$i].type)*.typeid:
+			$error @sprintf("Expected param of type '%s' but got type '%s'", $typefrom($Func.paramsof[$i].type)*.nameof, $typeof($vaexpr[$i]).nameof);
+		$endif
+		cl_data[$i + OFFSET] = (void*)$vaexpr[$i];
+	$endfor
+	cl_data[0] = (void*)func;
+	var $params = {};
+	usz $byte_off = 0;
+	$foreach $param : $Func.paramsof:
+		$params = $params +++ { {$param.type, $byte_off} };
+		$byte_off = $param.type.sizeof;
+	$endforeach
+
+	var cl_func = closure::@generate_closure($Func, OFFSET, $params, $vasplat);
+
+	$echo $typeof(cl_func).nameof;
+	uptr closure_start = closure_count * code_len;
+	io::printfn("before: %s, %s", closure_start, closure_start % 8);
+	closure_start += uptr.sizeof - closure_start % uptr.sizeof;
+
+	io::printfn("after: %s, %s", closure_start, closure_start % 8);
+	closures_data[closure_start:code_len] = ((char*)code_ptr)[:code_len];
+
+	*(uptr*)(&closures_data[closure_start + code_func_offset]) = (uptr)cl_func;
+	*(uptr*)(&closures_data[closure_start + code_arg_offset]) = (uptr)cl_data;
+	var y = ($typeof(fn int(int) => 0))(void*)&closures_data[closure_start + code_offset];
+	return y;
+}
+
 module closure;
 import std::io;
 
