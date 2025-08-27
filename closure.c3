@@ -143,7 +143,7 @@ macro create(Allocator alloc, func, ...)
 
 	*(uptr*)(&closures_data[closure_offset + code_func_offset]) = (uptr)cl_func;
 	*(uptr*)(&closures_data[closure_offset + code_arg_offset]) = (uptr)cl_data;
-	var y = ($typeof(fn int(int) => 0))(void*)&closures_data[closure_offset + code_offset];
+	var y = ($typeof(fn $typefrom($Func.returns)(int) => unreachable()))(void*)&closures_data[closure_offset + code_offset];
 	return y;
 }
 

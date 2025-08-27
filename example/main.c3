@@ -24,23 +24,27 @@ fn void print_something_else(void* dat) @nostrip
 	io::printfn("Hello Again!: %p", dat);
 }
 
-fn int print(String fmt, int i)
+fn String print(String fmt, int i)
 {
 	io::printfn(fmt, i);
-	return 0;
+	return string::tformat(fmt, i);
 }
+
+alias IntString = fn String(int);
 
 fn int main(String[] args)
 {
 	closures::init()!!;
 	defer closures::deinit();
 
-	IntFn f;
-	for (int i = 0; i < 10; i++)
+
+	int i = 0;
+	IntString f = closures::create(tmem, &print, &&"foo %s");
+	$echo IntString.paramsof.len;
+	for (; i < 10; i++)
 	{
-		IntFn f1 = closures::create(tmem, &add3, @tclone(i), &&2);
-		if (i == 0) f = f1;
-		io::printfn("f(1): %s, f1(1): %s", f(1), f1(1));
+		// IntString f1 = closures::create(tmem, fn int(int a, int b) => a + b, &i);
+		io::printfn("f(0) = %s", f(i));
 	}
 	// print_something() @noinline;
 //	io::printfn("In main!");
