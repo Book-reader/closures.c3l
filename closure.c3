@@ -107,16 +107,6 @@ asm(`
 	{
 		closure_offset = uptr.alignof - (uptr)closures_data % uptr.alignof;
 	}
-	/*closures_data[:code_len] = ((char*)code_ptr)[:code_len];
-	*(uptr*)&closures_data[code_func_offset] = (uptr)&print_something;
-	*(uptr*)&closures_data[code_arg_offset] = (uptr)0x12345;
-
-	VoidFn f = (VoidFn)(void*)&closures_data[code_offset];
-	io::printfn("closures_data: %.16x, actual: %.16x, f: %p", *(uptr*)&closures_data[code_func_offset], &print_something, f);
-	f();
-	*(uptr*)&closures_data[code_func_offset] = (uptr)&print_something_else;
-	f();*/
-
 }
 
 fn void deinit()
@@ -127,8 +117,6 @@ fn void deinit()
 
 macro create(Allocator alloc, func, ...)
 {
-	// defer closure_count ++;
-	// var cl = closure::@new_copy(mem, func, $vasplat);
 	var $Func = $typeof(func);
 	const OFFSET = 1;
 	void** cl_data = allocator::alloc_array(alloc, void*, $vacount + OFFSET);
@@ -149,13 +137,8 @@ macro create(Allocator alloc, func, ...)
 
 	var cl_func = closure::@generate_closure($Func, OFFSET, $params, $vasplat);
 
-	$echo $typeof(cl_func).nameof;
-	// uptr closure_start = closure_count * code_len;
-	// io::printfn("before: %s, %s", closure_start, closure_start % 8);
-	// closure_start += uptr.sizeof - closure_start % uptr.sizeof;
 	defer closure_offset += code_len + (uptr.alignof - code_len % uptr.alignof);
 
-	// io::printfn("after: %s, %s", closure_start, closure_start % 8);
 	closures_data[closure_offset:code_len] = ((char*)code_ptr)[:code_len];
 
 	*(uptr*)(&closures_data[closure_offset + code_func_offset]) = (uptr)cl_func;
