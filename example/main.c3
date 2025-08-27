@@ -84,6 +84,7 @@ asm(`
 	.quad 0
 .start.code:
 	pushq %rax;
+	# TODO: why does pushing and popping %rdi cause it to break?
 	# pushq %rdi;
 	movq .start.arg(%rip), %rdi; # This should be the linux calling convention register for the first integer function parameter
 	movq .start.func(%rip), %rax;
