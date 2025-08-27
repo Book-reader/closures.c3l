@@ -48,7 +48,7 @@ asm(`
 	mov rax, [code_offset@GOTTPOFF + rip];
 	mov fs:[rax], rbx;
 
-	# Fourth, store the offset of the data into code_arg_offset and jump to end
+	# Fourth, store the offset of the data into code_arg_offset
 	lea rax, .start;
 	lea rbx, .start.arg;
 	sub rbx, rax;
