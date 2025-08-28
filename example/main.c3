@@ -10,6 +10,7 @@ fn int add3(int a, int b, int c)
 	return a + b + c;
 }
 
+
 alias IntFn = fn int(int);
 alias VoidFn = fn void();
 alias IntString = fn String(int);
@@ -19,7 +20,6 @@ fn int main(String[] args)
 	closures::init()!!;
 	defer closures::deinit();
 
-
 	int a = 1;
 	var fmt @safeinfer = closure::new(fn String(int a, usz b, String c) => string::tformat("a: %s, b: %s, c: %s", a, b, c), &a);
 	defer closure::free(fmt);
@@ -28,6 +28,7 @@ fn int main(String[] args)
 	var fmt1 @safeinfer = closure::new_copy(fmt, 1234);
 	io::printn(fmt1("world!"));
 	closure::free(fmt1);
+
 	IntFn add1 = closure::new(&add3, &a, &&2);
 	io::printn(add1(3));
 	closure::free(add1);

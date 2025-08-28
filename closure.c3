@@ -28,6 +28,7 @@ const OsType[*] TESTED_OS = {LINUX};
 <*
  Initialise the closure data
  Needs to be run on each thread that intends to create closures
+ @require (void*)closures_data == null : "Closures are already initialised"
  @param closure_data_allocator : "The allocator used to copy parameters, if using `tmem` it will not be thread-safe"
  @param arena_size : "The size in bytes to allocate for closures to be stored in. Closure size depends on optimisation level but is usually between 30 and 50 on x84_64."
                      "arena_size will be rounded to the nearest multiple of the page size (4096 on my computer)"
@@ -48,7 +49,9 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 		$error @sprintf("Currently closures do not support architecture %s, feel free to open an issue/pr for your arch", env::ARCH_TYPE);
 	$endif
 
-	io::printfn("code len: %s", code_len);
+	io::printfn("code_ptr: %p, code_len: %s, code_offset: %s, code_arg_offset: %s, code_func_offset: %s, returnaddr_offset: %s", code_ptr, code_len, code_offset, code_arg_offset, code_func_offset, returnaddr_offset);
+
+	// io::printfn("code len: %s", code_len);
 	allocated_size = vm::aligned_alloc_size(arena_size);
 
 	closures_data = (ClosureData)posix::mmap(null, allocated_size, VirtualMemoryAccess.ANY.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
@@ -87,8 +90,10 @@ import closures @public;
 import std::io;
 
 <*
- @require (void*)closures_data != null : "closures::init must be called before creating closures"
- @require used_closures < max_closures : "Created too many closures at once"
+ Takes a function pointer and a list of N pointers, then returns a function the first N parameters removed and the values of those parameters set to the value at each of the pointers when the closure is invoked
+ @param func : "The function pointer to wrap in a closure"
+ @require (void*)closures_data != null : "`closures::init` must be called before creating closures"
+ @require used_closures < max_closures : "Ran out of space for closures, please free some or allocate a larger closure arena with `closures::init`"
 *>
 macro new(func, ...)
 {
@@ -96,8 +101,10 @@ macro new(func, ...)
 }
 
 <*
- @require (void*)closures_data != null : "closures::init must be called before creating closures"
- @require used_closures < max_closures : "Created too many closures at once"
+ Takes a function pointer and a list of N values, copies the values, then returns a function the first N parameters removed and the values of those parameters set to the values passed
+ @param func : "The param to wrap in a closure"
+ @require (void*)closures_data != null : "`closures::init` must be called before creating closures"
+ @require used_closures < max_closures : "Ran out of space for closures, please free some or allocate a larger closure arena with `closures::init`"
 *>
 macro new_copy(func, ...)
 {
@@ -105,14 +112,13 @@ macro new_copy(func, ...)
 }
 
 <*
- @require used_closures > 0 : "Attempted to free a closure when none were allocated, note that closures must be freed from the thread that creates them"
+ @require (void*)closures_data != null : "Attempted to free a closure on a thread with no closure data, note that closures must be freed by the thread that creates them"
+ @require used_closures > 0 : "Attempted to free a closure when none were allocated"
  @require (uptr)func >= (uptr)closures_data && (uptr)func <= (uptr)closures_data + (closure_aligned_size * max_closures)
-	: "Func must be a function pointer created by closure::new"
+	: "Func must be a function pointer created by `closure::new` on the same thread it's freed on"
 *>
 macro void free(func)
 {
-	assert(used_closures != 0);
-	io::printfn("%p %s", (void*)closures_data, used_closures);
 	used_closures --;
 
 	uptr closure_start_addr = (uptr)func - code_offset;
@@ -215,73 +221,73 @@ macro init_X86_64()
 {
 asm(`
 .intel_syntax
-	push rax;
-	push rbx;
+	push rax
+	push rbx
 
 	# First, load the address of "start:" into "code_ptr"
-	lea rbx, .start;
-	mov  rax, [code_ptr@GOTPCREL + rip];
-	mov [rax], rbx;
+	lea rbx, .Lclosure_start
+	mov  rax, [code_ptr@GOTPCREL + rip]
+	mov [rax], rbx
 
 	# Second, get the length of the assembly in bytes
-	lea rax, .start;
-	lea rbx, .end;
-	sub rbx, rax;
-	mov rax, [code_len@GOTPCREL + rip];
-	mov [rax], rbx;
+	lea rax, .Lclosure_start
+	lea rbx, .Lclosure_end
+	sub rbx, rax
+	mov rax, [code_len@GOTPCREL + rip]
+	mov [rax], rbx
 
 	# Third, store the offset of the code into code_offset
-	lea rax, .start;
-	lea rbx, .start.code;
-	sub rbx, rax;
-	mov rax, [code_offset@GOTPCREL + rip];
-	mov [rax], rbx;
+	lea rax, .Lclosure_start
+	lea rbx, .Lclosure_code
+	sub rbx, rax
+	mov rax, [code_offset@GOTPCREL + rip]
+	mov [rax], rbx
 
 	# Fourth, store the offset of the stored parameter into code_arg_offset
-	lea rax, .start;
-	lea rbx, .start.arg;
-	sub rbx, rax;
-	mov rax, [code_arg_offset@GOTPCREL + rip];
-	mov [rax], rbx;
+	lea rax, .Lclosure_start
+	lea rbx, .Lclosure_arg
+	sub rbx, rax
+	mov rax, [code_arg_offset@GOTPCREL + rip]
+	mov [rax], rbx
 
 	# Fifth, store the offset from the return location to the arg for use in the closure
-	lea rax, .start.arg;
-	lea rbx, .start.return_loc;
-	sub rbx, rax;
-	mov rax, [returnaddr_offset@GOTPCREL + rip];
-	mov [rax], rbx;
+	lea rax, .Lclosure_arg
+	lea rbx, .Lclosure_return_loc
+	sub rbx, rax
+	mov rax, [returnaddr_offset@GOTPCREL + rip]
+	mov [rax], rbx
 
 	# Finally, store the offset of the stored function into code_func_offset and jump to end
-	lea rax, .start;
-	lea rbx, .start.func;
-	sub rbx, rax;
-	mov rax, [code_func_offset@GOTPCREL + rip];
-	mov [rax], rbx;
+	lea rax, .Lclosure_start
+	lea rbx, .Lclosure_func
+	sub rbx, rax
+	mov rax, [code_func_offset@GOTPCREL + rip]
+	mov [rax], rbx
 
-	pop rbx;
-	pop rax;
-	jmp .end;
+	pop rbx
+	pop rax
+	jmp .Lclosure_end;
 
-.start:
-.start.arg:
-	.quad 0
-.start.func:
-	.quad 0
 	.p2align 4
-.start.code:
+.Lclosure_start:
+.Lclosure_arg:
+	.quad 0
+.Lclosure_func:
+	.quad 0
+.Lclosure_code:
 	# Some boilerplate stuff for saving the stack pointer & registers, hopefully it's correct otherwise it'll just randomly break depending on what the compiler does with registers
 	push rbp
 	.cfi_def_cfa_offset 16
 	.cfi_offset rbp, -16
 	mov rbp, rsp
-	 .cfi_def_cfa_register rbp
+	.cfi_def_cfa_register rbp
 	# The actual function dispatch
-	call [.start.func + rip];
-.start.return_loc:
-	pop rbp;
+	call [.Lclosure_func + rip]
+.Lclosure_return_loc:
+	pop rbp
 	.cfi_def_cfa rsp, 8
-	ret;
-.end:
+	ret
+.Lclosure_end:
 `);
 }
 
