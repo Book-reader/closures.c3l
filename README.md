@@ -2,6 +2,4 @@
 
 See [example/main.c3](./example/main.c3) for an example of usage and the doc comments in [closure.c3](./closure.c3) for a more detailed explanation of usage.
 
-> [!WARNING]
-> creating closures in a loop or repeatedly calling a function that creates a closure will break due to how closures are implemented.<br/>
-> I am looking to resolve this, but do not expect it to be fixed anytime soon.
+There is a limit of 20 total parameters that can be increased by modifying the python file [generator.py](./generator.py)
