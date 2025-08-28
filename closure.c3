@@ -2,14 +2,17 @@ module closures;
 
 import std::io;
 import std::os::posix;
+import std::atomic;
 import libc;
 
-tlocal void* code_ptr @builtin @private @nostrip @extern("code_ptr") @export;
-tlocal uptr code_len @builtin @private @nostrip @extern("code_len") @export;
-tlocal uptr code_offset @builtin @private @nostrip @extern("code_offset") @export;
-tlocal uptr code_arg_offset @builtin @private @nostrip @extern("code_arg_offset") @export;
-tlocal uptr code_func_offset @builtin @private @nostrip @extern("code_func_offset") @export;
-tlocal uptr returnaddr_offset @builtin @private @nostrip @extern("returnaddr_offset") @export;
+Atomic {bool} has_init;
+void* code_ptr @builtin @private @nostrip @extern("code_ptr") @export;
+uptr code_len @builtin @private @nostrip @extern("code_len") @export;
+uptr code_offset @builtin @private @nostrip @extern("code_offset") @export;
+uptr code_arg_offset @builtin @private @nostrip @extern("code_arg_offset") @export;
+uptr code_func_offset @builtin @private @nostrip @extern("code_func_offset") @export;
+uptr returnaddr_offset @builtin @private @nostrip @extern("returnaddr_offset") @export;
+
 tlocal usz allocated_size @builtin @private;
 tlocal ClosureData closures_data @builtin @private;
 tlocal ClosureState[] used_closure_indexes @builtin @private;
@@ -24,18 +27,23 @@ const OsType[*] TESTED_OS = {LINUX};
 
 fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 {
+	returnaddr_offset = 123456;
 	$if !array::@contains(TESTED_OS, env::OS_TYPE):
 		$echo @sprintf("WARNING: closures have not been tested to work on your operating system (%s), open an issue if things do not function properly", env::OS_TYPE);
 	$endif
 	$if $defined($eval("init_" +++ env::ARCH_TYPE.nameof)):
-		$eval("init_" +++ env::ARCH_TYPE.nameof)();
+		if (!has_init.load())
+		{
+			has_init.store(true);
+			$eval("init_" +++ env::ARCH_TYPE.nameof)();
+		}
 	$else
 		$error @sprintf("Currently closures do not support architecture %s, feel free to open an issue/pr for your arch", env::ARCH_TYPE);
 	$endif
 
 	allocated_size = vm::aligned_alloc_size(arena_size);
 
-	closures_data = (ClosureData)posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
+	closures_data = (ClosureData)posix::mmap(null, allocated_size, VirtualMemoryAccess.ANY.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
 	if ((void*)closures_data == posix::MAP_FAILED)
 	{
 		io::printfn("error: %s", libc::errno());
@@ -87,6 +95,7 @@ macro new_copy(func, ...)
 <*
  @require (uptr)func >= (uptr)closures_data && (uptr)func <= (uptr)closures_data + (closure_aligned_size * max_closures)
 	: "Func must be a function pointer created by closure::new"
+ @require used_closures > 0 : "Attempted to free a closure when none were allocated, note that closures must be freed from the thread that creates them"
 *>
 macro void free(func)
 {
@@ -157,19 +166,19 @@ bitstruct ClosureState : char
 
 typedef ClosureData = char*;
 
-<* @require idx <= max_closures *>
+<* @require idx < max_closures *>
 fn void ClosureData.set_data_at_idx(self, usz idx, void* data) => ((char*)self)[(idx * closure_aligned_size):code_len] = ((char*)data)[:code_len];
 
-<* @require idx <= max_closures *>
+<* @require idx < max_closures *>
 fn void ClosureData.set_func_at_idx(self, usz idx, void* func) => *(uptr*)(&self[(idx * closure_aligned_size) + code_func_offset]) = (uptr)func;
 
-<* @require idx <= max_closures *>
+<* @require idx < max_closures *>
 fn void ClosureData.set_arg_at_idx(self, usz idx, void* arg) => *(uptr*)(&self[(idx * closure_aligned_size) + code_arg_offset]) = (uptr)arg;
 
-<* @require idx <= max_closures *>
+<* @require idx < max_closures *>
 fn void* ClosureData.get_closure_at_idx(self, usz idx) => (void*)&closures_data[(idx * closure_aligned_size) + code_offset];
 
-<* @require idx <= max_closures *>
+<* @require idx < max_closures *>
 fn void* ClosureData.get_arg_at_idx(self, usz idx) => *(void**)&self[(idx * closure_aligned_size) + code_arg_offset];
 
 macro init_X86_64()
@@ -181,43 +190,43 @@ asm(`
 
 	# First, load the address of "start:" into "code_ptr"
 	lea rbx, .start;
-	mov  rax, [code_ptr@GOTTPOFF + rip];
-	mov fs:[rax], rbx;
+	mov  rax, [code_ptr@GOTPCREL + rip];
+	mov [rax], rbx;
 
 	# Second, get the length of the assembly in bytes
 	lea rax, .start;
 	lea rbx, .end;
 	sub rbx, rax;
-	mov rax, [code_len@GOTTPOFF + rip];
-	mov fs:[rax], rbx;
+	mov rax, [code_len@GOTPCREL + rip];
+	mov [rax], rbx;
 
 	# Third, store the offset of the code into code_offset
 	lea rax, .start;
 	lea rbx, .start.code;
 	sub rbx, rax;
-	mov rax, [code_offset@GOTTPOFF + rip];
-	mov fs:[rax], rbx;
+	mov rax, [code_offset@GOTPCREL + rip];
+	mov [rax], rbx;
 
 	# Fourth, store the offset of the stored parameter into code_arg_offset
 	lea rax, .start;
 	lea rbx, .start.arg;
 	sub rbx, rax;
-	mov rax, [code_arg_offset@GOTTPOFF + rip];
-	mov fs:[rax], rbx;
+	mov rax, [code_arg_offset@GOTPCREL + rip];
+	mov [rax], rbx;
 
 	# Fifth, store the offset from the return location to the arg for use in the closure
 	lea rax, .start.arg;
 	lea rbx, .start.return_loc;
 	sub rbx, rax;
-	mov rax, [returnaddr_offset@GOTTPOFF + rip];
-	mov fs:[rax], rbx;
+	mov rax, [returnaddr_offset@GOTPCREL + rip];
+	mov [rax], rbx;
 
 	# Finally, store the offset of the stored function into code_func_offset and jump to end
 	lea rax, .start;
 	lea rbx, .start.func;
 	sub rbx, rax;
-	mov rax, [code_func_offset@GOTTPOFF + rip];
-	mov fs:[rax], rbx;
+	mov rax, [code_func_offset@GOTPCREL + rip];
+	mov [rax], rbx;
 
 	pop rbx;
 	pop rax;
