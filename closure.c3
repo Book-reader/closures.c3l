@@ -89,7 +89,8 @@ import closures @public;
 import std::io;
 
 <*
- Takes a function pointer and a list of N pointers, then returns a function the first N parameters removed and the values of those parameters set to the value at each of the pointers when the closure is invoked
+ Takes a function pointer and a list of N values, then returns a function the first N parameters removed and the values of those parameters set to the value
+ It implicitly takes the values as pointers to alway have the latest version of the variable when called, but this means to pass a heap-allocated pointer to a value parameter you should pass `*ptr`
  @param func : "The function pointer to wrap in a closure"
  @require (void*)closures_data != null : "`closures::init` must be called before creating closures"
  @require used_closures < max_closures : "Ran out of space for closures, please free some or allocate a larger closure arena with `closures::init`"
@@ -156,7 +157,7 @@ macro new_internal(func, bool $copy, ...)
 	void** cl_data = allocator::alloc_array(closure_allocator, void*, $vacount + OFFSET + ($copy ? 1 : 0));
 
 	$for var $i = 0; $i < $vacount; $i++:
-		var $ParamType = @select($copy, $typefrom($Func.paramsof[$i].type), $typefrom($Func.paramsof[$i].type)*);
+		var $ParamType = $typefrom($Func.paramsof[$i].type);
 
 		$if !$defined($ParamType x = $vaexpr[$i]):
 			$error @sprintf("Expected param assignable to type '%s' but got '%s' (%s)", $ParamType.nameof, $stringify($vaexpr[$i]), $typeof($vaexpr[$i]).nameof);
@@ -165,7 +166,11 @@ macro new_internal(func, bool $copy, ...)
 		$if $copy:
 			cl_data[$i + OFFSET] = allocator::clone(closure_allocator, ($ParamType)$vaexpr[$i]);
 		$else
-			(($ParamType*)cl_data)[$i + OFFSET] = $vaexpr[$i];
+			$if $defined(&$vaexpr[$i]):
+				cl_data[$i + OFFSET] = &($ParamType)$vaexpr[$i];
+			$else
+				cl_data[$i + OFFSET] = &&($ParamType)$vaexpr[$i];
+			$endif
 		$endif
 	$endfor
 	cl_data[0] = (void*)func;
