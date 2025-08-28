@@ -119,8 +119,12 @@ macro void free(func)
 macro new_internal(func, bool $copy, ...)
 {
 	used_closures ++;
-	// TODO: maybe handle overaligned types (if I even need to, might not since I only handle pointers)? would probably make allocating them more complex though
+	// TODO: maybe handle overaligned types (if I even need to, might not since I only store pointers)? would probably make allocating them more complex though
 	var $Func = $typeof(func);
+	const MAX_PARAMS = 20;
+	$if $Func.paramsof.len > MAX_PARAMS:
+		$error @sprintf("Closures do not support functions with over %s parameters, modify this check and the python file to increase this limit.", MAX_PARAMS);
+	$endif
 	const OFFSET = 1;
 	void** cl_data = allocator::alloc_array(closure_allocator, void*, $vacount + OFFSET);
 

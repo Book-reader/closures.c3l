@@ -1,7 +1,7 @@
 print("module closures::closure;")
 print("import closures @public;")
 
-max_params = 10
+max_params = 20
 print("macro @generate_closure($OrigFnType, $offset, $params, ...) @private\n{")
 print("$switch $params.len:")
 for i in range(max_params + 1):
