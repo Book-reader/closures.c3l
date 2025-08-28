@@ -4,17 +4,18 @@ import std::io;
 import std::os::posix;
 import libc;
 
-tlocal void* code_ptr @builtin @private @nostrip @extern("code_ptr");
-tlocal uptr code_len @builtin @private @nostrip @extern("code_len");
-tlocal uptr code_offset @builtin @private @nostrip @extern("code_offset");
-tlocal uptr code_arg_offset @builtin @private @nostrip @extern("code_arg_offset");
-tlocal uptr code_func_offset @builtin @private @nostrip @extern("code_func_offset");
+tlocal void* code_ptr @builtin @private @nostrip @extern("code_ptr") @export;
+tlocal uptr code_len @builtin @private @nostrip @extern("code_len") @export;
+tlocal uptr code_offset @builtin @private @nostrip @extern("code_offset") @export;
+tlocal uptr code_arg_offset @builtin @private @nostrip @extern("code_arg_offset") @export;
+tlocal uptr code_func_offset @builtin @private @nostrip @extern("code_func_offset") @export;
 tlocal uptr returnaddr_offset @builtin @private @nostrip @extern("returnaddr_offset") @export;
 tlocal usz allocated_size @builtin @private;
 tlocal usz closure_offset @builtin @private;
-tlocal char* closures_data @builtin @private;
+tlocal ClosureData closures_data @builtin @private;
 tlocal ClosureState[] used_closure_indexes @builtin @private;
 tlocal usz max_closures @builtin @private;
+tlocal usz used_closures @builtin @private;
 tlocal Allocator closure_allocator @builtin @private;
 tlocal usz closure_aligned_size @builtin @private;
 
@@ -36,8 +37,8 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 	// io::printfn("return address offset is '%s'", returnaddr_offset);
 	allocated_size = vm::aligned_alloc_size(arena_size);
 
-	closures_data = posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
-	if (closures_data == posix::MAP_FAILED)
+	closures_data = (ClosureData)posix::mmap(null, allocated_size, VirtualMemoryAccess.EXECWRITE.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
+	if ((void*)closures_data == posix::MAP_FAILED)
 	{
 		io::printfn("error: %s", libc::errno());
 		return INIT_FAILED?;
@@ -59,7 +60,7 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 
 fn void deinit()
 {
-	posix::munmap(closures_data, allocated_size);
+	posix::munmap((void*)closures_data, allocated_size);
 	allocator::free(closure_allocator, used_closure_indexes);
 	closures_data = null;
 }
@@ -69,10 +70,12 @@ import closures @public;
 import std::io;
 
 <*
- @require closures_data != null : "closures::init must be called before creating closures"
+ @require (void*)closures_data != null : "closures::init must be called before creating closures"
+ @require used_closures < max_closures : "Created too many closures at once"
 *>
 macro new(func, ...)
 {
+	used_closures ++;
 	// TODO: maybe handle overaligned types (if I even need to, might not since I only handle pointers)? would probably make allocating them more complex though
 	var $Func = $typeof(func);
 	const OFFSET = 1;
@@ -92,22 +95,19 @@ macro new(func, ...)
 
 	var cl_func = @generate_closure($Func, OFFSET, $params, $vasplat);
 
-
 	// defer closure_offset += code_len + (uptr.alignof - code_len % uptr.alignof);
 	usz closure_idx = 0;
 	while (used_closure_indexes[closure_idx].used) closure_idx ++;
 	used_closure_indexes[closure_idx].used = true;
-	io::printfn("allocating closure at offset %s ending at offset %s. code_len: %s, aligned_len: %s", (closure_idx * closure_aligned_size), (closure_idx * closure_aligned_size) + code_len, code_len, closure_aligned_size);
+	io::printfn("allocating closure at idx %s offset %s ending at offset %s. code_len: %s, aligned_len: %s", closure_idx, (closure_idx * closure_aligned_size), (closure_idx * closure_aligned_size) + code_len, code_len, closure_aligned_size);
 
 
-	closures_data[(closure_idx * closure_aligned_size):code_len] = ((char*)code_ptr)[:code_len];
+	closures_data.set_data_at_idx(closure_idx, code_ptr);
 
-	*(uptr*)(&closures_data[(closure_idx * closure_aligned_size) + code_func_offset]) = (uptr)cl_func;
-	*(uptr*)(&closures_data[(closure_idx * closure_aligned_size) + code_arg_offset]) = (uptr)cl_data;
-	// io::printfn("Storing args at %p", (uptr*)(&closures_data[closure_offset + code_arg_offset]));
-	var y = ($typeof(cl_func))(void*)&closures_data[(closure_idx * closure_aligned_size) + code_offset];
-	// $echo $typeof(y).nameof;
-	return y;
+	closures_data.set_func_at_idx(closure_idx, cl_func);
+	closures_data.set_arg_at_idx(closure_idx, cl_data);
+
+	return ($typeof(cl_func))closures_data.get_closure_at_idx(closure_idx);
 }
 
 <*
@@ -116,27 +116,48 @@ macro new(func, ...)
 *>
 macro void free(func)
 {
+	used_closures --;
+
 	uptr closure_start_addr = (uptr)func - code_offset;
 	uptr closure_offset = closure_start_addr - (uptr)closures_data;
-	io::printfn("start: %s, aligned_size: %s, code_offset: %s", closure_start_addr, closure_aligned_size, code_offset);
+	// io::printfn("start: %s, aligned_size: %s, code_offset: %s", closure_start_addr, closure_aligned_size, code_offset);
 	assert(closure_offset % closure_aligned_size == 0);
 	usz closure_idx = closure_offset / closure_aligned_size;
-	io::printfn("closure idx: %s", closure_idx);
+	assert(used_closure_indexes[closure_idx].used);
+	// io::printfn("freeing closure at idx: %s", closure_idx);
 
 	// TODO: also free copied data if used_closure_indexes[closure_idx].copied == true
-	allocator::free(closure_allocator, *(void**)&closures_data[(closure_idx * closure_aligned_size) + code_arg_offset]);
+	allocator::free(closure_allocator, closures_data.get_arg_at_idx(closure_idx));
 
 	$if env::COMPILER_SAFE_MODE:
-		closures_data[(closure_idx * closure_aligned_size):code_len] = 0xAA;
+		((char*)closures_data)[(closure_idx * closure_aligned_size):code_len] = 0xAA;
 	$endif
 	used_closure_indexes[closure_idx] = {};
 }
 
+module closures @private;
 bitstruct ClosureState : char
 {
 	bool used;
 	bool copied;
 }
+
+typedef ClosureData = char*;
+
+<* @require idx <= max_closures *>
+fn void ClosureData.set_data_at_idx(self, usz idx, void* data) => ((char*)self)[(idx * closure_aligned_size):code_len] = ((char*)data)[:code_len];
+
+<* @require idx <= max_closures *>
+fn void ClosureData.set_func_at_idx(self, usz idx, void* func) => *(uptr*)(&self[(idx * closure_aligned_size) + code_func_offset]) = (uptr)func;
+
+<* @require idx <= max_closures *>
+fn void ClosureData.set_arg_at_idx(self, usz idx, void* arg) => *(uptr*)(&self[(idx * closure_aligned_size) + code_arg_offset]) = (uptr)arg;
+
+<* @require idx <= max_closures *>
+fn void* ClosureData.get_closure_at_idx(self, usz idx) => (void*)&closures_data[(idx * closure_aligned_size) + code_offset];
+
+<* @require idx <= max_closures *>
+fn void* ClosureData.get_arg_at_idx(self, usz idx) => *(void**)&self[(idx * closure_aligned_size) + code_arg_offset];
 // tlocal void** temp_closure_ptr @private;
 // const OFFSET @private = 1;
 /*

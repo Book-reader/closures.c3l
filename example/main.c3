@@ -85,8 +85,11 @@ fn int main(String[] args)
 	io::printn(fmt(1, "hello"));
 	a = 4;
 	var fmt1 @safeinfer = closure::new(fmt, &&1234ul);
-	defer closure::free(fmt1);
 	io::printn(fmt1("world!"));
+	closure::free(fmt1);
+	IntFn add1 = closure::new(&add3, &&1, &&2);
+	io::printn(add1(3));
+	closure::free(add1);
 
 	return 0;
 }
