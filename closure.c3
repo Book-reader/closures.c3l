@@ -30,8 +30,8 @@ const OsType[*] TESTED_OS = {LINUX};
  Needs to be run on each thread that intends to create closures
  @require (void*)closures_data == null : "Closures are already initialised"
  @param closure_data_allocator : "The allocator used to copy parameters, if using `tmem` it will not be thread-safe"
- @param arena_size : "The size in bytes to allocate for closures to be stored in. Closure size depends on architecture but on x86 is ~28 bytes (excluding extra for alignment)"
-                     "arena_size will be rounded to the nearest multiple of the page size (4096 on my computer), which ends up being enough for ~102 closures per 4096 byte page"
+ @param arena_size : "The size in bytes to allocate for closures to be stored in. Closure size depends on architecture but on x86 is ~70 bytes (excluding extra for alignment)"
+                     "arena_size will be rounded to the nearest multiple of the page size (4096 on my computer), which ends up being enough for ~46 closures per 4096 byte page"
 *>
 fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 {
@@ -273,25 +273,20 @@ asm(`
 	.quad 0
 .Lclosure_func:
 	.quad 0
-.Lretn_addr:
+.Lretn_addr: # The original return address of the function, saved here so I can replace it without messing with the stack and breaking things
 	.quad 0
-.Ltemp:
+.Ltemp: # I could save ~20 bytes by not saving rax in .Ltemp, but I don't want to risk it breaking if the compiler decides to use it for something else when calling a closure returning void
 	.quad 0
 	.p2align 4
 .Lclosure_code:
-	# push [.Lclosure_return_loc + rip]
-	# push rax
 	pop qword ptr [.Lretn_addr + rip]
 	mov [.Ltemp + rip], rax
 	lea rax, [.Lclosure_return_loc + rip]
 	push rax
 	mov rax, [.Ltemp + rip]
 	jmp [.Lclosure_func + rip]
-	# push qword ptr [.Lretn_addr + rip]
 .Lclosure_return_loc:
 	push qword ptr [.Lretn_addr + rip]
-	# pop rax
-	# .cfi_def_cfa rsp, 8
 	ret
 .Lclosure_end:
 `);
