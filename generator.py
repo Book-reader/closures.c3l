@@ -18,6 +18,9 @@ for i in range(max_params + 1):
 			print(f"{chr(97 + k)}, ", end = '')
 		print(")\n\t\t{")
 		print("\t\t\tvoid** args = *(void***)((uptr)$$returnaddress(0) - returnaddr_offset);")
+		# print("\t\t\tvoid** args;;")
+		# print("\t\t\tasm {popq args;};")
+		# print("args = (void**)((uptr)((void**)*@volatile_load(args)) - returnaddr_offset);")
 		print("\t\t\treturn (($OrigFnType)args[0])(", end = '')
 		for k in range(i - j):
 			print(f"*($typefrom($params[{k}])*)args[{k} + $offset], ", end = '')

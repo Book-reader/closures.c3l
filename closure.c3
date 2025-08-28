@@ -273,18 +273,25 @@ asm(`
 	.quad 0
 .Lclosure_func:
 	.quad 0
+.Lretn_addr:
+	.quad 0
+.Ltemp:
+	.quad 0
+	.p2align 4
 .Lclosure_code:
-	# Some boilerplate stuff for saving the stack pointer & registers, hopefully it's correct otherwise it'll just randomly break depending on what the compiler does with registers
-	push rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset rbp, -16
-	mov rbp, rsp
-	.cfi_def_cfa_register rbp
-	# The actual function dispatch
-	call [.Lclosure_func + rip]
+	# push [.Lclosure_return_loc + rip]
+	# push rax
+	pop qword ptr [.Lretn_addr + rip]
+	mov [.Ltemp + rip], rax
+	lea rax, [.Lclosure_return_loc + rip]
+	push rax
+	mov rax, [.Ltemp + rip]
+	jmp [.Lclosure_func + rip]
+	# push qword ptr [.Lretn_addr + rip]
 .Lclosure_return_loc:
-	pop rbp
-	.cfi_def_cfa rsp, 8
+	push qword ptr [.Lretn_addr + rip]
+	# pop rax
+	# .cfi_def_cfa rsp, 8
 	ret
 .Lclosure_end:
 `);

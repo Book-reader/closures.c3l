@@ -4,23 +4,41 @@ import std::io;
 import std::atomic;
 import std::thread;
 
-fn int add3(int a, int b, int c)
+fn int add3(int a, int b, int c, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int)
 {
-	// io::printfn("%s + %s + %s = %s", a, b, c, a + b + c);
+	io::printfn("%s + %s + %s = %s", a, b, c, a + b + c);
 	return a + b + c;
 }
-
 
 alias IntFn = fn int(int);
 alias VoidFn = fn void();
 alias IntString = fn String(int);
 
+
 fn int main(String[] args)
 {
+	// static int a = 12345678;
+	// io::printfn("a: %s", a);
 	closures::init()!!;
 	defer closures::deinit();
 
-	int a = 1;
+	// var add @safeinfer = closure::new_copy(&add3, 6, 5);
+	// io::printfn("a = %s", add(4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
+
+	var path_fn @safeinfer = closure::new_copy(fn bool?(Allocator alloc, Path path, bool is_dir, void*)
+		{
+			io::printfn("%s", path);
+			if (is_dir) return false;
+			if (@catch(path.extension()) || (path.extension()!! != "c3" && path.extension()!! != "c3i")) return false;
+			String file_data = (String)file::load(tmem, path.path_string)!;
+			// get_modules(alloc, modules, parser, file_data, path.basename()[:^path.extension().len + 1]!!);
+			return false;
+		}, mem);
+	defer closure::free(path_fn);
+
+	path_fn(path::new(tmem, "./flake.nix")!!, true, null)!!;
+
+/*	int a = 1;
 	var fmt @safeinfer = closure::new(fn String(int a, usz b, String c) => string::tformat("a: %s, b: %s, c: %s", a, b, c), &a);
 	defer closure::free(fmt);
 	io::printn(fmt(1, "hello"));
@@ -56,7 +74,7 @@ fn int main(String[] args)
 			has_inc_a.store(true);
 		}
 	}
-	(void)test_thread.join();
+	(void)test_thread.join();*/
 
 	return 0;
 }
@@ -65,6 +83,7 @@ fn int main(String[] args)
 fn int test_thread_closure(IntFn addA, Atomic {bool}* running, Atomic {bool}* has_inc_a, void*) => @pool_init(mem, 4096 * 10)
 {
 	io::printfn("[Thread 2] started");
+	abort();
 	while (running.load())
 	{
 		if (has_inc_a.load())
