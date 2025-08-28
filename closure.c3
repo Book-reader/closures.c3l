@@ -25,6 +25,13 @@ faultdef INIT_FAILED;
 
 const OsType[*] TESTED_OS = {LINUX};
 
+<*
+ Initialise the closure data
+ Needs to be run on each thread that intends to create closures
+ @param closure_data_allocator : "The allocator used to copy parameters, if using `tmem` it will not be thread-safe"
+ @param arena_size : "The size in bytes to allocate for closures to be stored in. Closure size depends on optimisation level but is usually between 30 and 50 on x84_64."
+                     "arena_size will be rounded to the nearest multiple of the page size (4096 on my computer)"
+*>
 fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 {
 	returnaddr_offset = 123456;
@@ -41,6 +48,7 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 		$error @sprintf("Currently closures do not support architecture %s, feel free to open an issue/pr for your arch", env::ARCH_TYPE);
 	$endif
 
+	io::printfn("code len: %s", code_len);
 	allocated_size = vm::aligned_alloc_size(arena_size);
 
 	closures_data = (ClosureData)posix::mmap(null, allocated_size, VirtualMemoryAccess.ANY.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
@@ -65,8 +73,12 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 
 fn void deinit()
 {
-	posix::munmap((void*)closures_data, allocated_size);
+	foreach (i, cl : used_closure_indexes)
+	{
+		if (cl.used) closure::free(closures_data.get_closure_at_idx(i));
+	}
 	allocator::free(closure_allocator, used_closure_indexes);
+	posix::munmap((void*)closures_data, allocated_size);
 	closures_data = null;
 }
 
@@ -93,12 +105,14 @@ macro new_copy(func, ...)
 }
 
 <*
+ @require used_closures > 0 : "Attempted to free a closure when none were allocated, note that closures must be freed from the thread that creates them"
  @require (uptr)func >= (uptr)closures_data && (uptr)func <= (uptr)closures_data + (closure_aligned_size * max_closures)
 	: "Func must be a function pointer created by closure::new"
- @require used_closures > 0 : "Attempted to free a closure when none were allocated, note that closures must be freed from the thread that creates them"
 *>
 macro void free(func)
 {
+	assert(used_closures != 0);
+	io::printfn("%p %s", (void*)closures_data, used_closures);
 	used_closures --;
 
 	uptr closure_start_addr = (uptr)func - code_offset;
@@ -108,7 +122,15 @@ macro void free(func)
 	assert(used_closure_indexes[closure_idx].used);
 
 	// TODO: also free copied data if used_closure_indexes[closure_idx].copied == true
-	allocator::free(closure_allocator, closures_data.get_arg_at_idx(closure_idx));
+	void** args = closures_data.get_arg_at_idx(closure_idx);
+	if (used_closure_indexes[closure_idx].copied)
+	{
+		for (usz i = OFFSET; args[i] != null; i++)
+		{
+			allocator::free(closure_allocator, args[i]);
+		}
+	}
+	allocator::free(closure_allocator, args);
 
 	$if env::COMPILER_SAFE_MODE:
 		((char*)closures_data)[(closure_idx * closure_aligned_size):code_len] = 0xAA;
@@ -116,6 +138,7 @@ macro void free(func)
 	used_closure_indexes[closure_idx] = {};
 }
 
+const OFFSET = 1;
 macro new_internal(func, bool $copy, ...)
 {
 	used_closures ++;
@@ -125,8 +148,7 @@ macro new_internal(func, bool $copy, ...)
 	$if $Func.paramsof.len > MAX_PARAMS:
 		$error @sprintf("Closures do not support functions with over %s parameters, modify this check and the python file to increase this limit.", MAX_PARAMS);
 	$endif
-	const OFFSET = 1;
-	void** cl_data = allocator::alloc_array(closure_allocator, void*, $vacount + OFFSET);
+	void** cl_data = allocator::alloc_array(closure_allocator, void*, $vacount + OFFSET + ($copy ? 1 : 0));
 
 	$for var $i = 0; $i < $vacount; $i++:
 		var $ParamType = @select($copy, $typefrom($Func.paramsof[$i].type), $typefrom($Func.paramsof[$i].type)*);
@@ -136,12 +158,16 @@ macro new_internal(func, bool $copy, ...)
 		$endif
 
 		$if $copy:
-			cl_data[$i + OFFSET] = allocator::clone(closure_allocator, $vaexpr[$i]);
+			cl_data[$i + OFFSET] = allocator::clone(closure_allocator, ($ParamType)$vaexpr[$i]);
 		$else
 			(($ParamType*)cl_data)[$i + OFFSET] = $vaexpr[$i];
 		$endif
 	$endfor
 	cl_data[0] = (void*)func;
+	$if $copy:
+		cl_data[$vacount + OFFSET] = null;
+	$endif
+
 	var $params = {};
 	$foreach $param : $Func.paramsof:
 		$params = $params +++ { $param.type};

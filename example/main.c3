@@ -12,46 +12,8 @@ fn int add3(int a, int b, int c)
 
 alias IntFn = fn int(int);
 alias VoidFn = fn void();
-
-// TODO: this is two slightly different bugs. one with `movl [c], $eax` and one with `movl c, $eax;`
-/*fn int test1(int, int) @nostrip
-{
-	int a, b;
-	/*asm
-	{
-		movl $eax, [$rbp - 4];
-		movl a, $eax;
-		movl $eax, [$rbp - 8];
-		movl b, $eax;
-	}*/
-	/*io::printfn("a: %p, b: %p", &a, &b);
-	io::printfn("a: %s, b: %s", a, b);*/
-	// asm("ret");
-	a = 123;
-	defer
-	{
-		int c;
-		asm
-		{
-			movl [c], $eax;
-		};
-		io::printfn("returned %s", c);
-	}
-	return self(a);// @noinline;
-/*	asm
-	(`
-		popq %r11;
-		jmpq *%r11;
-	`);*/
-}*/
-
-fn int self(int a) => a;
-
 alias IntString = fn String(int);
-// TODO: write down issues/wants with inline assembly blocks (and strings) and make an issue for them. trying to rewrite the current assembly string in an assembly block should give a good idea.
-//       1: be able to take the address of labels
-//       2: be able to take the address of local variables
-//       3: more instructions (jmp, call, etc)
+
 fn int main(String[] args)
 {
 	closures::init()!!;
@@ -77,6 +39,7 @@ fn int main(String[] args)
 	has_inc_a.store(false);
 
 	IntFn addA = closure::new(fn int(int a, int b) => a + b, &a);
+	defer closure::free(addA);
 
 	ThreadFn test_thread_fn = closure::new_copy(&test_thread_closure, addA, &running, &has_inc_a);
 	defer closure::free(test_thread_fn);
@@ -98,7 +61,7 @@ fn int main(String[] args)
 }
 
 
-fn int test_thread_closure(IntFn addA, Atomic {bool}* running, Atomic {bool}* has_inc_a, void*)
+fn int test_thread_closure(IntFn addA, Atomic {bool}* running, Atomic {bool}* has_inc_a, void*) => @pool_init(mem, 4096 * 10)
 {
 	io::printfn("[Thread 2] started");
 	while (running.load())
@@ -111,6 +74,8 @@ fn int test_thread_closure(IntFn addA, Atomic {bool}* running, Atomic {bool}* ha
 			has_inc_a.store(false);
 		}
 	}
+	// io::printfn("[Thread 2] freeing closure allocated in Thread 1");
+	// closure::free(addA);
 	io::printfn("[Thread 2] exiting");
 	return 0;
 }
