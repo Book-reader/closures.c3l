@@ -36,7 +36,7 @@ const OsType[*] TESTED_OS = {LINUX};
 fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 {
 	returnaddr_offset = 123456;
-	$if !array::@contains(TESTED_OS, env::OS_TYPE):
+	$if !@contains(TESTED_OS, env::OS_TYPE):
 		$echo @sprintf("WARNING: closures have not been tested to work on your operating system (%s), open an issue if things do not function properly", env::OS_TYPE);
 	$endif
 	$if $defined($eval("init_" +++ env::ARCH_TYPE.nameof)):
@@ -289,8 +289,6 @@ asm(`
 .Lclosure_end:
 `);
 }
-
-module std::core::array;
 
 macro @contains($array, $val) @const
 {
