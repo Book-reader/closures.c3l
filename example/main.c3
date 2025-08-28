@@ -14,23 +14,6 @@ fn int add3(int a, int b, int c)
 alias IntFn = fn int(int);
 alias VoidFn = fn void();
 
-fn void print_something(void* dat) @nostrip @extern("print_something")// @naked
-{
-	io::printn("abc");
-	io::printfn("Hello from assembly: %p", dat);
-}
-
-fn void print_something_else(void* dat) @nostrip
-{
-	io::printfn("Hello Again!: %p", dat);
-}
-
-fn String print(String fmt, int i)
-{
-	io::printfn(fmt, i);
-	return string::tformat(fmt, i);
-}
-
 // TODO: this is two slightly different bugs. one with `movl [c], $eax` and one with `movl c, $eax;`
 /*fn int test1(int, int) @nostrip
 {
@@ -73,8 +56,6 @@ alias IntString = fn String(int);
 //       3: more instructions (jmp, call, etc)
 fn int main(String[] args)
 {
-	//io::printfn("a: %s", test1(12345, 67890));
-	//io::printfn("a");
 	closures::init()!!;
 	defer closures::deinit();
 
@@ -84,7 +65,7 @@ fn int main(String[] args)
 	defer closure::free(fmt);
 	io::printn(fmt(1, "hello"));
 	a = 4;
-	var fmt1 @safeinfer = closure::new(fmt, &&1234ul);
+	var fmt1 @safeinfer = closure::new_copy(fmt, 1234);
 	io::printn(fmt1("world!"));
 	closure::free(fmt1);
 	IntFn add1 = closure::new(&add3, &&1, &&2);
