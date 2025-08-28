@@ -30,8 +30,8 @@ const OsType[*] TESTED_OS = {LINUX};
  Needs to be run on each thread that intends to create closures
  @require (void*)closures_data == null : "Closures are already initialised"
  @param closure_data_allocator : "The allocator used to copy parameters, if using `tmem` it will not be thread-safe"
- @param arena_size : "The size in bytes to allocate for closures to be stored in. Closure size depends on optimisation level but is usually between 30 and 50 on x84_64."
-                     "arena_size will be rounded to the nearest multiple of the page size (4096 on my computer)"
+ @param arena_size : "The size in bytes to allocate for closures to be stored in. Closure size depends on architecture but on x86 is ~28 bytes (excluding extra for alignment)"
+                     "arena_size will be rounded to the nearest multiple of the page size (4096 on my computer), which ends up being enough for ~102 closures per 4096 byte page"
 *>
 fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 {
@@ -49,9 +49,6 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 		$error @sprintf("Currently closures do not support architecture %s, feel free to open an issue/pr for your arch", env::ARCH_TYPE);
 	$endif
 
-	io::printfn("code_ptr: %p, code_len: %s, code_offset: %s, code_arg_offset: %s, code_func_offset: %s, returnaddr_offset: %s", code_ptr, code_len, code_offset, code_arg_offset, code_func_offset, returnaddr_offset);
-
-	// io::printfn("code len: %s", code_len);
 	allocated_size = vm::aligned_alloc_size(arena_size);
 
 	closures_data = (ClosureData)posix::mmap(null, allocated_size, VirtualMemoryAccess.ANY.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
@@ -68,6 +65,8 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 	closure_aligned_size = code_len + uptr.alignof;
 	closure_aligned_size += uptr.alignof - closure_aligned_size % uptr.alignof;
 	max_closures = allocated_size / closure_aligned_size;
+
+	// io::printfn("code_ptr: %p, code_len: %s, code_offset: %s, code_arg_offset: %s, code_func_offset: %s, returnaddr_offset: %s, closure_aligned_size: %s, max_closures: %s", code_ptr, code_len, code_offset, code_arg_offset, code_func_offset, returnaddr_offset, closure_aligned_size, max_closures);
 
 	closure_allocator = closure_data_allocator;
 	used_closure_indexes = allocator::alloc_array(closure_allocator, ClosureState, max_closures);
