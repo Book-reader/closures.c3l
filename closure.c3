@@ -126,7 +126,6 @@ macro void free(func)
 	usz closure_idx = closure_offset / closure_aligned_size;
 	assert(used_closure_indexes[closure_idx].used);
 
-	// TODO: also free copied data if used_closure_indexes[closure_idx].copied == true
 	void** args = closures_data.get_arg_at_idx(closure_idx);
 	if (used_closure_indexes[closure_idx].copied)
 	{
@@ -147,7 +146,6 @@ const OFFSET = 1;
 macro new_internal(func, bool $copy, ...)
 {
 	used_closures ++;
-	// TODO: maybe handle overaligned types (if I even need to, might not since I only store pointers)? would probably make allocating them more complex though
 	var $Func = $typeof(func);
 	const MAX_PARAMS = 20;
 	$if $Func.paramsof.len > MAX_PARAMS:
