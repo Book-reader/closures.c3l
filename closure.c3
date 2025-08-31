@@ -47,11 +47,7 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 
 	allocated_size = vm::aligned_alloc_size(arena_size);
 
-	$if env::LINUX:
-		closures_data = (ClosureData)_mmap(allocated_size)!;
-	$else
-		closures_data = (ClosureData)vm::alloc(allocated_size, ANY)!;
-	$endif
+	closures_data = (ClosureData)vm::alloc(allocated_size, ANY)!;
 	if ((uptr)closures_data % uptr.alignof != 0)
 	{
 		unreachable("closures_data was unaligned");
@@ -75,11 +71,7 @@ fn void deinit()
 		if (cl.used) closure::free(closures_data.get_closure_at_idx(i));
 	}
 	allocator::free(closure_allocator, used_closure_indexes);
-	$if env::LINUX:
-		_munmap((void*)closures_data, allocated_size);
-	$else
-		vm::release((void*)closures_data, allocated_size);
-	$endif
+	(void)vm::release((void*)closures_data, allocated_size);
 	closures_data = null;
 }
 
@@ -302,25 +294,3 @@ macro @contains($array, $val) @const
 	return false;
 }
 
-<*
- A workaround for a stdlib mmap bug for until it is resolved
-*>
-module closures @if(env::LINUX) @private;
-import std::os::posix;
-import std::io;
-import libc;
-
-faultdef INIT_FAILED;
-
-macro void*? _mmap(usz allocated_size)
-{
-	void* dat = posix::mmap(null, allocated_size, VirtualMemoryAccess.ANY.to_posix(), posix::MAP_PRIVATE | 0x20, -1, 0);
-	if (dat == posix::MAP_FAILED)
-	{
-		io::eprintfn("error: %s", libc::errno());
-		return INIT_FAILED?;
-	}
-	return dat;
-}
-
-macro _munmap(void* dat, usz allocated_size) => posix::munmap(dat, allocated_size);
