@@ -60,7 +60,7 @@ fn void? init(Allocator closure_data_allocator = mem, usz arena_size = 4096)
 	// io::printfn("code_ptr: %p, code_len: %s, code_offset: %s, code_arg_offset: %s, code_func_offset: %s, returnaddr_offset: %s, closure_aligned_size: %s, max_closures: %s", code_ptr, code_len, code_offset, code_arg_offset, code_func_offset, returnaddr_offset, closure_aligned_size, max_closures);
 
 	closure_allocator = closure_data_allocator;
-	used_closure_indexes = allocator::alloc_array(closure_allocator, ClosureState, max_closures);
+	used_closure_indexes = allocator::new_array(closure_allocator, ClosureState, max_closures);
 
 }
 
